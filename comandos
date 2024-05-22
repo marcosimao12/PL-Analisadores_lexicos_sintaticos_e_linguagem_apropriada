@@ -1,0 +1,3 @@
+py test_fca_grammar.py
+py test_fca_lexer.py
+

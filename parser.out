@@ -1,0 +1,543 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    COLON
+    DOT
+    INTEIRO
+    SLASH
+    STRING
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAMA ID declarations statements
+Rule 2     declarations -> declarations declaration
+Rule 3     declarations -> declaration
+Rule 4     declaration -> CONST ID EQUALS NUMBER SEMICOLON
+Rule 5     declaration -> VAR ID SEMICOLON
+Rule 6     statements -> statements statement
+Rule 7     statements -> statement
+Rule 8     statement -> assignment
+Rule 9     statement -> print_stmt
+Rule 10    assignment -> ID EQUALS expression SEMICOLON
+Rule 11    print_stmt -> ESCREVER ID SEMICOLON
+Rule 12    expression -> expression PLUS term
+Rule 13    expression -> expression MINUS term
+Rule 14    expression -> term
+Rule 15    term -> term TIMES factor
+Rule 16    term -> term DIVIDE factor
+Rule 17    term -> factor
+Rule 18    factor -> NUMBER
+Rule 19    factor -> ID
+Rule 20    factor -> LPAREN expression RPAREN
+
+Terminals, with rules where they appear
+
+COLON                : 
+CONST                : 4
+DIVIDE               : 16
+DOT                  : 
+EQUALS               : 4 10
+ESCREVER             : 11
+ID                   : 1 4 5 10 11 19
+INTEIRO              : 
+LPAREN               : 20
+MINUS                : 13
+NUMBER               : 4 18
+PLUS                 : 12
+PROGRAMA             : 1
+RPAREN               : 20
+SEMICOLON            : 4 5 10 11
+SLASH                : 
+STRING               : 
+TIMES                : 15
+VAR                  : 5
+error                : 
+
+Nonterminals, with rules where they appear
+
+assignment           : 8
+declaration          : 2 3
+declarations         : 1 2
+expression           : 10 12 13 20
+factor               : 15 16 17
+print_stmt           : 9
+program              : 0
+statement            : 6 7
+statements           : 1 6
+term                 : 12 13 14 15 16
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PROGRAMA ID declarations statements
+
+    PROGRAMA        shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PROGRAMA . ID declarations statements
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) program -> PROGRAMA ID . declarations statements
+    (2) declarations -> . declarations declaration
+    (3) declarations -> . declaration
+    (4) declaration -> . CONST ID EQUALS NUMBER SEMICOLON
+    (5) declaration -> . VAR ID SEMICOLON
+
+    CONST           shift and go to state 6
+    VAR             shift and go to state 7
+
+    declarations                   shift and go to state 4
+    declaration                    shift and go to state 5
+
+state 4
+
+    (1) program -> PROGRAMA ID declarations . statements
+    (2) declarations -> declarations . declaration
+    (6) statements -> . statements statement
+    (7) statements -> . statement
+    (4) declaration -> . CONST ID EQUALS NUMBER SEMICOLON
+    (5) declaration -> . VAR ID SEMICOLON
+    (8) statement -> . assignment
+    (9) statement -> . print_stmt
+    (10) assignment -> . ID EQUALS expression SEMICOLON
+    (11) print_stmt -> . ESCREVER ID SEMICOLON
+
+    CONST           shift and go to state 6
+    VAR             shift and go to state 7
+    ID              shift and go to state 8
+    ESCREVER        shift and go to state 14
+
+    statements                     shift and go to state 9
+    declaration                    shift and go to state 10
+    statement                      shift and go to state 11
+    assignment                     shift and go to state 12
+    print_stmt                     shift and go to state 13
+
+state 5
+
+    (3) declarations -> declaration .
+
+    CONST           reduce using rule 3 (declarations -> declaration .)
+    VAR             reduce using rule 3 (declarations -> declaration .)
+    ID              reduce using rule 3 (declarations -> declaration .)
+    ESCREVER        reduce using rule 3 (declarations -> declaration .)
+
+
+state 6
+
+    (4) declaration -> CONST . ID EQUALS NUMBER SEMICOLON
+
+    ID              shift and go to state 15
+
+
+state 7
+
+    (5) declaration -> VAR . ID SEMICOLON
+
+    ID              shift and go to state 16
+
+
+state 8
+
+    (10) assignment -> ID . EQUALS expression SEMICOLON
+
+    EQUALS          shift and go to state 17
+
+
+state 9
+
+    (1) program -> PROGRAMA ID declarations statements .
+    (6) statements -> statements . statement
+    (8) statement -> . assignment
+    (9) statement -> . print_stmt
+    (10) assignment -> . ID EQUALS expression SEMICOLON
+    (11) print_stmt -> . ESCREVER ID SEMICOLON
+
+    $end            reduce using rule 1 (program -> PROGRAMA ID declarations statements .)
+    ID              shift and go to state 8
+    ESCREVER        shift and go to state 14
+
+    statement                      shift and go to state 18
+    assignment                     shift and go to state 12
+    print_stmt                     shift and go to state 13
+
+state 10
+
+    (2) declarations -> declarations declaration .
+
+    CONST           reduce using rule 2 (declarations -> declarations declaration .)
+    VAR             reduce using rule 2 (declarations -> declarations declaration .)
+    ID              reduce using rule 2 (declarations -> declarations declaration .)
+    ESCREVER        reduce using rule 2 (declarations -> declarations declaration .)
+
+
+state 11
+
+    (7) statements -> statement .
+
+    ID              reduce using rule 7 (statements -> statement .)
+    ESCREVER        reduce using rule 7 (statements -> statement .)
+    $end            reduce using rule 7 (statements -> statement .)
+
+
+state 12
+
+    (8) statement -> assignment .
+
+    ID              reduce using rule 8 (statement -> assignment .)
+    ESCREVER        reduce using rule 8 (statement -> assignment .)
+    $end            reduce using rule 8 (statement -> assignment .)
+
+
+state 13
+
+    (9) statement -> print_stmt .
+
+    ID              reduce using rule 9 (statement -> print_stmt .)
+    ESCREVER        reduce using rule 9 (statement -> print_stmt .)
+    $end            reduce using rule 9 (statement -> print_stmt .)
+
+
+state 14
+
+    (11) print_stmt -> ESCREVER . ID SEMICOLON
+
+    ID              shift and go to state 19
+
+
+state 15
+
+    (4) declaration -> CONST ID . EQUALS NUMBER SEMICOLON
+
+    EQUALS          shift and go to state 20
+
+
+state 16
+
+    (5) declaration -> VAR ID . SEMICOLON
+
+    SEMICOLON       shift and go to state 21
+
+
+state 17
+
+    (10) assignment -> ID EQUALS . expression SEMICOLON
+    (12) expression -> . expression PLUS term
+    (13) expression -> . expression MINUS term
+    (14) expression -> . term
+    (15) term -> . term TIMES factor
+    (16) term -> . term DIVIDE factor
+    (17) term -> . factor
+    (18) factor -> . NUMBER
+    (19) factor -> . ID
+    (20) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 26
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 27
+
+    expression                     shift and go to state 23
+    term                           shift and go to state 24
+    factor                         shift and go to state 25
+
+state 18
+
+    (6) statements -> statements statement .
+
+    ID              reduce using rule 6 (statements -> statements statement .)
+    ESCREVER        reduce using rule 6 (statements -> statements statement .)
+    $end            reduce using rule 6 (statements -> statements statement .)
+
+
+state 19
+
+    (11) print_stmt -> ESCREVER ID . SEMICOLON
+
+    SEMICOLON       shift and go to state 28
+
+
+state 20
+
+    (4) declaration -> CONST ID EQUALS . NUMBER SEMICOLON
+
+    NUMBER          shift and go to state 29
+
+
+state 21
+
+    (5) declaration -> VAR ID SEMICOLON .
+
+    CONST           reduce using rule 5 (declaration -> VAR ID SEMICOLON .)
+    VAR             reduce using rule 5 (declaration -> VAR ID SEMICOLON .)
+    ID              reduce using rule 5 (declaration -> VAR ID SEMICOLON .)
+    ESCREVER        reduce using rule 5 (declaration -> VAR ID SEMICOLON .)
+
+
+state 22
+
+    (19) factor -> ID .
+
+    TIMES           reduce using rule 19 (factor -> ID .)
+    DIVIDE          reduce using rule 19 (factor -> ID .)
+    SEMICOLON       reduce using rule 19 (factor -> ID .)
+    PLUS            reduce using rule 19 (factor -> ID .)
+    MINUS           reduce using rule 19 (factor -> ID .)
+    RPAREN          reduce using rule 19 (factor -> ID .)
+
+
+state 23
+
+    (10) assignment -> ID EQUALS expression . SEMICOLON
+    (12) expression -> expression . PLUS term
+    (13) expression -> expression . MINUS term
+
+    SEMICOLON       shift and go to state 30
+    PLUS            shift and go to state 31
+    MINUS           shift and go to state 32
+
+
+state 24
+
+    (14) expression -> term .
+    (15) term -> term . TIMES factor
+    (16) term -> term . DIVIDE factor
+
+    SEMICOLON       reduce using rule 14 (expression -> term .)
+    PLUS            reduce using rule 14 (expression -> term .)
+    MINUS           reduce using rule 14 (expression -> term .)
+    RPAREN          reduce using rule 14 (expression -> term .)
+    TIMES           shift and go to state 33
+    DIVIDE          shift and go to state 34
+
+
+state 25
+
+    (17) term -> factor .
+
+    TIMES           reduce using rule 17 (term -> factor .)
+    DIVIDE          reduce using rule 17 (term -> factor .)
+    SEMICOLON       reduce using rule 17 (term -> factor .)
+    PLUS            reduce using rule 17 (term -> factor .)
+    MINUS           reduce using rule 17 (term -> factor .)
+    RPAREN          reduce using rule 17 (term -> factor .)
+
+
+state 26
+
+    (18) factor -> NUMBER .
+
+    TIMES           reduce using rule 18 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 18 (factor -> NUMBER .)
+    SEMICOLON       reduce using rule 18 (factor -> NUMBER .)
+    PLUS            reduce using rule 18 (factor -> NUMBER .)
+    MINUS           reduce using rule 18 (factor -> NUMBER .)
+    RPAREN          reduce using rule 18 (factor -> NUMBER .)
+
+
+state 27
+
+    (20) factor -> LPAREN . expression RPAREN
+    (12) expression -> . expression PLUS term
+    (13) expression -> . expression MINUS term
+    (14) expression -> . term
+    (15) term -> . term TIMES factor
+    (16) term -> . term DIVIDE factor
+    (17) term -> . factor
+    (18) factor -> . NUMBER
+    (19) factor -> . ID
+    (20) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 26
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 27
+
+    expression                     shift and go to state 35
+    term                           shift and go to state 24
+    factor                         shift and go to state 25
+
+state 28
+
+    (11) print_stmt -> ESCREVER ID SEMICOLON .
+
+    ID              reduce using rule 11 (print_stmt -> ESCREVER ID SEMICOLON .)
+    ESCREVER        reduce using rule 11 (print_stmt -> ESCREVER ID SEMICOLON .)
+    $end            reduce using rule 11 (print_stmt -> ESCREVER ID SEMICOLON .)
+
+
+state 29
+
+    (4) declaration -> CONST ID EQUALS NUMBER . SEMICOLON
+
+    SEMICOLON       shift and go to state 36
+
+
+state 30
+
+    (10) assignment -> ID EQUALS expression SEMICOLON .
+
+    ID              reduce using rule 10 (assignment -> ID EQUALS expression SEMICOLON .)
+    ESCREVER        reduce using rule 10 (assignment -> ID EQUALS expression SEMICOLON .)
+    $end            reduce using rule 10 (assignment -> ID EQUALS expression SEMICOLON .)
+
+
+state 31
+
+    (12) expression -> expression PLUS . term
+    (15) term -> . term TIMES factor
+    (16) term -> . term DIVIDE factor
+    (17) term -> . factor
+    (18) factor -> . NUMBER
+    (19) factor -> . ID
+    (20) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 26
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 27
+
+    term                           shift and go to state 37
+    factor                         shift and go to state 25
+
+state 32
+
+    (13) expression -> expression MINUS . term
+    (15) term -> . term TIMES factor
+    (16) term -> . term DIVIDE factor
+    (17) term -> . factor
+    (18) factor -> . NUMBER
+    (19) factor -> . ID
+    (20) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 26
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 27
+
+    term                           shift and go to state 38
+    factor                         shift and go to state 25
+
+state 33
+
+    (15) term -> term TIMES . factor
+    (18) factor -> . NUMBER
+    (19) factor -> . ID
+    (20) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 26
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 27
+
+    factor                         shift and go to state 39
+
+state 34
+
+    (16) term -> term DIVIDE . factor
+    (18) factor -> . NUMBER
+    (19) factor -> . ID
+    (20) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 26
+    ID              shift and go to state 22
+    LPAREN          shift and go to state 27
+
+    factor                         shift and go to state 40
+
+state 35
+
+    (20) factor -> LPAREN expression . RPAREN
+    (12) expression -> expression . PLUS term
+    (13) expression -> expression . MINUS term
+
+    RPAREN          shift and go to state 41
+    PLUS            shift and go to state 31
+    MINUS           shift and go to state 32
+
+
+state 36
+
+    (4) declaration -> CONST ID EQUALS NUMBER SEMICOLON .
+
+    CONST           reduce using rule 4 (declaration -> CONST ID EQUALS NUMBER SEMICOLON .)
+    VAR             reduce using rule 4 (declaration -> CONST ID EQUALS NUMBER SEMICOLON .)
+    ID              reduce using rule 4 (declaration -> CONST ID EQUALS NUMBER SEMICOLON .)
+    ESCREVER        reduce using rule 4 (declaration -> CONST ID EQUALS NUMBER SEMICOLON .)
+
+
+state 37
+
+    (12) expression -> expression PLUS term .
+    (15) term -> term . TIMES factor
+    (16) term -> term . DIVIDE factor
+
+    SEMICOLON       reduce using rule 12 (expression -> expression PLUS term .)
+    PLUS            reduce using rule 12 (expression -> expression PLUS term .)
+    MINUS           reduce using rule 12 (expression -> expression PLUS term .)
+    RPAREN          reduce using rule 12 (expression -> expression PLUS term .)
+    TIMES           shift and go to state 33
+    DIVIDE          shift and go to state 34
+
+
+state 38
+
+    (13) expression -> expression MINUS term .
+    (15) term -> term . TIMES factor
+    (16) term -> term . DIVIDE factor
+
+    SEMICOLON       reduce using rule 13 (expression -> expression MINUS term .)
+    PLUS            reduce using rule 13 (expression -> expression MINUS term .)
+    MINUS           reduce using rule 13 (expression -> expression MINUS term .)
+    RPAREN          reduce using rule 13 (expression -> expression MINUS term .)
+    TIMES           shift and go to state 33
+    DIVIDE          shift and go to state 34
+
+
+state 39
+
+    (15) term -> term TIMES factor .
+
+    TIMES           reduce using rule 15 (term -> term TIMES factor .)
+    DIVIDE          reduce using rule 15 (term -> term TIMES factor .)
+    SEMICOLON       reduce using rule 15 (term -> term TIMES factor .)
+    PLUS            reduce using rule 15 (term -> term TIMES factor .)
+    MINUS           reduce using rule 15 (term -> term TIMES factor .)
+    RPAREN          reduce using rule 15 (term -> term TIMES factor .)
+
+
+state 40
+
+    (16) term -> term DIVIDE factor .
+
+    TIMES           reduce using rule 16 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 16 (term -> term DIVIDE factor .)
+    SEMICOLON       reduce using rule 16 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 16 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 16 (term -> term DIVIDE factor .)
+    RPAREN          reduce using rule 16 (term -> term DIVIDE factor .)
+
+
+state 41
+
+    (20) factor -> LPAREN expression RPAREN .
+
+    TIMES           reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+
