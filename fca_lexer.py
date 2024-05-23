@@ -1,58 +1,64 @@
-# fca_lexer.py
 import ply.lex as lex
 
 class FCALexer:
     tokens = (
         "varid", "num", "plus", "minus", "times", "divide", "lparen", "rparen",
-        "equals", "semicolon", "colon", "comma", "string", "programa", "const", 
-        "var", "entrada", "aleatorio", "funcao", "escrever", "lbracket", "rbracket", 
-        "concat", "map", "fold"
+        "equals", "semicolon", "colon", "comma", "string", "programa", "entrada", 
+        "aleatorio", "funcao", "escrever", "lbracket", "rbracket", "concat", "map", "fold",
+        "comment", "fim"
     )
 
     # Define literals (single-character tokens)
     literals = ["+", "-", "*", "/", "(", ")", "=", ";", ":", ",", "[", "]"]
 
     # Ignored characters (spaces and tabs)
-    t_ignore = " \n"
+    t_ignore = " \t"
 
-    def __init__(self):
-        self.lexer = None
+    # Define token for single line comments
+    def t_comment_single_line(self, t):
+        r"--.*"
+        t.type = "comment"
+        t.value = t.value[2:]  # Remove the comment marker
+        return t
+
+    # Define token for multi-line comments
+    def t_comment_multi_line(self, t):
+        r"\{-.*?-\}"
+        t.type = "comment"
+        t.value = t.value[2:-2]  # Remove the comment markers
+        return t
 
     # Define tokens for keywords
     def t_programa(self, t):
-        r"PROGRAMA"
-        return t
-
-    def t_const(self, t):
-        r"CONST"
-        return t
-
-    def t_var(self, t):
-        r"VAR"
+        r"[Pp][Rr][Oo][Gg][Rr][Aa][Mm][Aa]"
         return t
 
     def t_entrada(self, t):
-        r"ENTRADA"
+        r"[Ee][Nn][Tt][Rr][Aa][Dd][Aa]"
         return t
 
     def t_aleatorio(self, t):
-        r"ALEATORIO"
+        r"[Aa][Ll][Ee][Aa][Tt][Oo][Rr][Ii][Oo]"
         return t
 
     def t_funcao(self, t):
-        r"FUNCAO"
+        r"[Ff][Uu][Nn][Cc][Aa][Oo]"
         return t
 
     def t_escrever(self, t):
-        r"[Ee][Ss][Cc]([Rr][Ee][Vv][Ee][Rr])?"
+        r"[Ee][Ss][Cc][Rr][Ee][Vv][Ee][Rr]"
         return t
 
     def t_map(self, t):
-        r"MAP"
+        r"[Mm][Aa][Pp]"
         return t
 
     def t_fold(self, t):
-        r"FOLD"
+        r"[Ff][Oo][Ll][Dd]"
+        return t
+
+    def t_fim(self, t):
+        r"[Ff][Ii][Mm]"
         return t
 
     # Define token for string literals
@@ -77,19 +83,21 @@ class FCALexer:
         r"<>"
         return t
 
-    # Define token for comments (single line and multi-line)
-    def t_comment_single_line(self, t):
-        r"\-\-.*"
-        pass  # No return value. Token discarded
+    # Define tokens for function definitions
+    def t_funcao_def(self, t):
+        r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\(.*?\)\s*,:"
+        t.type = "funcao"
+        return t
 
-    def t_comment_multi_line(self, t):
-        r"\{\-.*?-\}"
-        pass  # No return value. Token discarded
+    def t_funcao_def_multiline(self, t):
+        r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\(.*?\)\s*:"
+        t.type = "funcao"
+        return t
 
     # Define error handling rule
     def t_error(self, t):
         print(f"Unexpected token: [{t.value[:10]}]")
-        exit(1)
+        t.lexer.skip(1)  # Skip the token and continue
 
     # Build the lexer
     def build(self, **kwargs):
@@ -102,4 +110,4 @@ class FCALexer:
     # Token function to get the next token
     def token(self):
         token = self.lexer.token()
-        return token if token is None else token.type 
+        return token.type if token else None
