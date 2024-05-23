@@ -27,6 +27,14 @@ exemplos = [  # exemplos a avaliar de forma independente...
     "fib5 = fib(5);",
     "seis = soma(4,2);",
     "oito = soma2(seis);",
+    """FUNCAO area_retangulo(a, b):
+    a * b;
+    FIM""",
+    """FUNCAO area_quadrado(a):
+        area_retangulo(a, a);
+    FIM""",
+    "a = area_retangulo(10, 20);",
+    "b = area_quadrado(30);",
 ]
 
 for frase in exemplos:
