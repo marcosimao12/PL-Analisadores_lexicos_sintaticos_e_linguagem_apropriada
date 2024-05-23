@@ -35,6 +35,30 @@ exemplos = [  # exemplos a avaliar de forma independente...
     FIM""",
     "a = area_retangulo(10, 20);",
     "b = area_quadrado(30);",
+    """FUNCAO fib( 0 ),: 0 ;
+    FUNCAO fib( 1 ),: 0 ;
+    FUNCAO fib( n ):
+        a = fib(n-1);
+        b = fib(n-2);
+        a + b;
+    FIM""",
+    "fib5 = fib(5);",
+    "lista = [ 1, 2, 3 ] ;",
+    "ESCREVER( lista ); -- [1,2,3]",
+    "vazia = [] ;",
+    "FUNCAO mais2( x ),: x + 2 ;",
+    "FUNCAO soma( a, b ),: a + b ;",
+    "lista1 = map( mais2, [] ); -- []",
+    "lista2 = map( mais2, [ 1, 2, 3 ] ); "
+    "-- [ mais2(1),mais2(2),mais2(3)] = [3,4,5]",
+    "lista3 = fold( soma, [ 1, 2, 3 ], 0 );",
+    "-- = soma( 1, soma(2, soma ( 3, 0)))",
+    "-- = soma( 1, soma(2, 3 ))",
+    "-- = soma( 1, 5)",
+    "-- = 6",
+    "FUNCAO somatorio( [] ),: 0 ;",
+    """FUNCAO somatorio( x:xs ),: x + somatorio(xs) ;
+        resultado = somatorio([1,2,3]);""",
 ]
 
 for frase in exemplos:
