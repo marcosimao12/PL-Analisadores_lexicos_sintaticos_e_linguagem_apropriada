@@ -85,14 +85,19 @@ class FCALexer:
 
     # Define tokens for function definitions
     def t_funcao_def(self, t):
-        r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\(.*?\)\s*,:"
+        r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*,:"
         t.type = "funcao"
         return t
 
     def t_funcao_def_multiline(self, t):
-        r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\(.*?\)\s*:"
+        r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*:"
         t.type = "funcao"
         return t
+
+    # Define a rule so we can track line numbers
+    def t_newline(self, t):
+        r'\n+'
+        t.lexer.lineno += len(t.value)
 
     # Define error handling rule
     def t_error(self, t):
