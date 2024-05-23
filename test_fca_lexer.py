@@ -1,6 +1,13 @@
 from fca_lexer import FCALexer
 
-exemplos = [
+exemplos = [  # exemplos a avaliar de forma independente... 
+    "(3-6)+9",
+    "num+2",
+    "ESCREVER Z;",
+    """ x = 10  ; 
+    y = 10 + 20 * 30;
+    z = x * 100 ; 
+    b =  a + 1 ; """
     "PROGRAMA exemplo",
     "CONST x = 10;",
     "VAR y;",
@@ -16,8 +23,8 @@ for frase in exemplos:
     lexer.input(frase)
     print('tokens: ', end="")
     while True:
-        tk = lexer.token()
-        if not tk:
+        tk = lexer.token() 
+        if not tk: 
             break
-        print(tk, end="")
+        print(tk, end=" ")
     print()
