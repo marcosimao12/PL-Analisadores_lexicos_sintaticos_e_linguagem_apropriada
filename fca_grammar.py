@@ -60,8 +60,12 @@ class FCAGrammar:
 
     # Declaração de função
     def p_declaracao_funcao(self, p):
-        """declaracao_funcao : funcao varid '(' parametros ')' ',' ':' lista_declaracoes fim"""
-        p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
+        """declaracao_funcao : funcao varid '(' parametros ')' ',' ':' lista_declaracoes fim
+                             | funcao varid '(' parametros ')' ',' ':' expressao ';'"""
+        if len(p) == 10:  # Regra com múltiplas declarações e FIM
+            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}
+        else:  # Regra com expressão única e ponto e vírgula
+            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}
 
     # Declaração de comando "escrever"
     def p_declaracao_escrever(self, p):
@@ -83,17 +87,17 @@ class FCAGrammar:
             p[1].append(p[3])
             p[0] = p[1]
 
- # Expressão de concatenação
+    # Expressão de concatenação
     def p_expressao_concat(self, p):
         """expressao : expressao concat expressao"""
         p[0] = {'op': 'concat', 'args': [p[1], p[3]]}
 
     # Expressão geral
     def p_expressao(self, p):
-        """expressao : expressao plus expressao
-                     | expressao minus expressao
-                     | expressao times expressao
-                     | expressao divide expressao
+        """expressao : expressao '+' expressao
+                     | expressao '-' expressao
+                     | expressao '*' expressao
+                     | expressao '/' expressao
                      | '(' expressao ')'
                      | '-' expressao %prec UMINUS
                      | varid
@@ -109,8 +113,6 @@ class FCAGrammar:
                 p[0] = {'op': '*', 'args': [p[1], p[3]]}
             elif p[2] == '/':
                 p[0] = {'op': '/', 'args': [p[1], p[3]]}
-            else:
-                p[0] = p[2]
         elif len(p) == 3:
             p[0] = {'op': 'neg', 'args': [p[2]]}
         elif len(p) == 2:
@@ -123,8 +125,8 @@ class FCAGrammar:
                     p[0] = {'op': 'literal', 'args': [p[1]]}
             else:
                 p[0] = p[1]
-
-
+        elif isinstance(p[1], str):
+             p[0] = {'op': 'var', 'args': [p[1]]}
 
     # Parâmetros de função
     def p_parametros(self, p):
@@ -136,6 +138,7 @@ class FCAGrammar:
             p[1].append(p[3])
             p[0] = p[1]
 
+    
     def p_error(self, p):
         if p:
             print(f"Syntax error at '{p.value}'")
