@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDECOLON CONST DIVIDE DOT EQUALS ESCREVER ID INTEIRO LPAREN MINUS NUMBER PLUS PROGRAMA RPAREN SEMICOLON SLASH STRING TIMES VARprogram : PROGRAMA ID declarations statementsdeclarations : declarations declaration\n                        | declarationdeclaration : CONST ID EQUALS NUMBER SEMICOLON\n                       | VAR ID SEMICOLONstatements : statements statement\n                      | statementstatement : assignment\n                     | print_stmtassignment : ID EQUALS expression SEMICOLONprint_stmt : ESCREVER ID SEMICOLONexpression : expression PLUS term\n                      | expression MINUS term\n                      | termterm : term TIMES factor\n                | term DIVIDE factor\n                | factorfactor : NUMBER\n                  | ID\n                  | LPAREN expression RPAREN'
+_lr_signature = 'leftplusminuslefttimesdividealeatorio colon comma comment concat const divide entrada equals escrever fim fold funcao lbracket lparen map minus num plus programa rbracket rparen semicolon string times var varidprogram : programa varid declarations statementsdeclarations : declaration\n                        | declarations declarationdeclaration : var varid semicolon\n                       | const varid equals num semicolonstatements : statement\n                      | statements statementstatement : assignment\n                     | print_stmtassignment : varid equals expression semicolonprint_stmt : escrever varid semicolonexpression : expression plus term\n                      | expression minus term\n                      | termterm : term times factor\n                | term divide factor\n                | factorfactor : num\n                  | varid\n                  | lparen expression rparen'
     
-_lr_action_items = {'PROGRAMA':([0,],[2,]),'$end':([1,9,11,12,13,18,28,30,],[0,-1,-7,-8,-9,-6,-11,-10,]),'ID':([2,4,5,6,7,9,10,11,12,13,14,17,18,21,27,28,30,31,32,33,34,36,],[3,8,-3,15,16,8,-2,-7,-8,-9,19,22,-6,-5,22,-11,-10,22,22,22,22,-4,]),'CONST':([3,4,5,10,21,36,],[6,6,-3,-2,-5,-4,]),'VAR':([3,4,5,10,21,36,],[7,7,-3,-2,-5,-4,]),'ESCREVER':([4,5,9,10,11,12,13,18,21,28,30,36,],[14,-3,14,-2,-7,-8,-9,-6,-5,-11,-10,-4,]),'EQUALS':([8,15,],[17,20,]),'SEMICOLON':([16,19,22,23,24,25,26,29,37,38,39,40,41,],[21,28,-19,30,-14,-17,-18,36,-12,-13,-15,-16,-20,]),'NUMBER':([17,20,27,31,32,33,34,],[26,29,26,26,26,26,26,]),'LPAREN':([17,27,31,32,33,34,],[27,27,27,27,27,27,]),'TIMES':([22,24,25,26,37,38,39,40,41,],[-19,33,-17,-18,33,33,-15,-16,-20,]),'DIVIDE':([22,24,25,26,37,38,39,40,41,],[-19,34,-17,-18,34,34,-15,-16,-20,]),'PLUS':([22,23,24,25,26,35,37,38,39,40,41,],[-19,31,-14,-17,-18,31,-12,-13,-15,-16,-20,]),'MINUS':([22,23,24,25,26,35,37,38,39,40,41,],[-19,32,-14,-17,-18,32,-12,-13,-15,-16,-20,]),'RPAREN':([22,24,25,26,35,37,38,39,40,41,],[-19,-14,-17,-18,41,-12,-13,-15,-16,-20,]),}
+_lr_action_items = {'programa':([0,],[2,]),'$end':([1,9,11,12,13,18,28,30,],[0,-1,-6,-8,-9,-7,-11,-10,]),'varid':([2,4,5,6,7,9,10,11,12,13,14,17,18,20,27,28,30,31,32,33,34,36,],[3,8,-2,15,16,8,-3,-6,-8,-9,19,22,-7,-4,22,-11,-10,22,22,22,22,-5,]),'var':([3,4,5,10,20,36,],[6,6,-2,-3,-4,-5,]),'const':([3,4,5,10,20,36,],[7,7,-2,-3,-4,-5,]),'escrever':([4,5,9,10,11,12,13,18,20,28,30,36,],[14,-2,14,-3,-6,-8,-9,-7,-4,-11,-10,-5,]),'equals':([8,16,],[17,21,]),'semicolon':([15,19,22,23,24,25,26,29,37,38,39,40,41,],[20,28,-19,30,-14,-17,-18,36,-12,-13,-15,-16,-20,]),'num':([17,21,27,31,32,33,34,],[26,29,26,26,26,26,26,]),'lparen':([17,27,31,32,33,34,],[27,27,27,27,27,27,]),'times':([22,24,25,26,37,38,39,40,41,],[-19,33,-17,-18,33,33,-15,-16,-20,]),'divide':([22,24,25,26,37,38,39,40,41,],[-19,34,-17,-18,34,34,-15,-16,-20,]),'plus':([22,23,24,25,26,35,37,38,39,40,41,],[-19,31,-14,-17,-18,31,-12,-13,-15,-16,-20,]),'minus':([22,23,24,25,26,35,37,38,39,40,41,],[-19,32,-14,-17,-18,32,-12,-13,-15,-16,-20,]),'rparen':([22,24,25,26,35,37,38,39,40,41,],[-19,-14,-17,-18,41,-12,-13,-15,-16,-20,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -27,24 +27,24 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> PROGRAMA ID declarations statements','program',4,'p_program','fca_grammar.py',22),
-  ('declarations -> declarations declaration','declarations',2,'p_declarations','fca_grammar.py',26),
-  ('declarations -> declaration','declarations',1,'p_declarations','fca_grammar.py',27),
-  ('declaration -> CONST ID EQUALS NUMBER SEMICOLON','declaration',5,'p_declaration','fca_grammar.py',34),
-  ('declaration -> VAR ID SEMICOLON','declaration',3,'p_declaration','fca_grammar.py',35),
-  ('statements -> statements statement','statements',2,'p_statements','fca_grammar.py',42),
-  ('statements -> statement','statements',1,'p_statements','fca_grammar.py',43),
+  ('program -> programa varid declarations statements','program',4,'p_program','fca_grammar.py',22),
+  ('declarations -> declaration','declarations',1,'p_declarations','fca_grammar.py',26),
+  ('declarations -> declarations declaration','declarations',2,'p_declarations','fca_grammar.py',27),
+  ('declaration -> var varid semicolon','declaration',3,'p_declaration','fca_grammar.py',34),
+  ('declaration -> const varid equals num semicolon','declaration',5,'p_declaration','fca_grammar.py',35),
+  ('statements -> statement','statements',1,'p_statements','fca_grammar.py',42),
+  ('statements -> statements statement','statements',2,'p_statements','fca_grammar.py',43),
   ('statement -> assignment','statement',1,'p_statement','fca_grammar.py',50),
   ('statement -> print_stmt','statement',1,'p_statement','fca_grammar.py',51),
-  ('assignment -> ID EQUALS expression SEMICOLON','assignment',4,'p_assignment','fca_grammar.py',55),
-  ('print_stmt -> ESCREVER ID SEMICOLON','print_stmt',3,'p_print_stmt','fca_grammar.py',59),
-  ('expression -> expression PLUS term','expression',3,'p_expression','fca_grammar.py',63),
-  ('expression -> expression MINUS term','expression',3,'p_expression','fca_grammar.py',64),
+  ('assignment -> varid equals expression semicolon','assignment',4,'p_assignment','fca_grammar.py',55),
+  ('print_stmt -> escrever varid semicolon','print_stmt',3,'p_print_stmt','fca_grammar.py',59),
+  ('expression -> expression plus term','expression',3,'p_expression','fca_grammar.py',63),
+  ('expression -> expression minus term','expression',3,'p_expression','fca_grammar.py',64),
   ('expression -> term','expression',1,'p_expression','fca_grammar.py',65),
-  ('term -> term TIMES factor','term',3,'p_term','fca_grammar.py',72),
-  ('term -> term DIVIDE factor','term',3,'p_term','fca_grammar.py',73),
+  ('term -> term times factor','term',3,'p_term','fca_grammar.py',72),
+  ('term -> term divide factor','term',3,'p_term','fca_grammar.py',73),
   ('term -> factor','term',1,'p_term','fca_grammar.py',74),
-  ('factor -> NUMBER','factor',1,'p_factor','fca_grammar.py',81),
-  ('factor -> ID','factor',1,'p_factor','fca_grammar.py',82),
-  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor','fca_grammar.py',83),
+  ('factor -> num','factor',1,'p_factor','fca_grammar.py',81),
+  ('factor -> varid','factor',1,'p_factor','fca_grammar.py',82),
+  ('factor -> lparen expression rparen','factor',3,'p_factor','fca_grammar.py',83),
 ]

@@ -4,8 +4,8 @@ class FCALexer:
     tokens = (
         "varid", "num", "plus", "minus", "times", "divide", "lparen", "rparen",
         "equals", "semicolon", "colon", "comma", "string", "programa", "entrada", 
-        "aleatorio", "funcao", "escrever", "lbracket", "rbracket", "concat", "map", "fold",
-        "comment", "fim"
+        "aleatorio", "funcao", "escrever", "lbracket", "rbracket", "concat", "var", "const", "map",
+          "fold", "comment", "fim"
     )
 
     # Define literals (single-character tokens)
@@ -47,6 +47,14 @@ class FCALexer:
 
     def t_escrever(self, t):
         r"[Ee][Ss][Cc][Rr][Ee][Vv][Ee][Rr]"
+        return t
+    
+    def t_var(self, t):
+        r"[Vv][Aa][Rr]"
+        return t
+    
+    def t_const(self, t):
+        r"[Cc][Oo][Nn][Ss][Tt]"
         return t
 
     def t_map(self, t):
