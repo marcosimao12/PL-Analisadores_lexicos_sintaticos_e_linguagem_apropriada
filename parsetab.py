@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftplusminuslefttimesdividealeatorio colon comma comment concat const divide entrada equals escrever fim fold funcao lbracket lparen map minus num plus programa rbracket rparen semicolon string times var varidprogram : programa varid declarations statementsdeclarations : declaration\n                        | declarations declarationdeclaration : var varid semicolon\n                       | const varid equals num semicolonstatements : statement\n                      | statements statementstatement : assignment\n                     | print_stmtassignment : varid equals expression semicolonprint_stmt : escrever varid semicolonexpression : expression plus term\n                      | expression minus term\n                      | termterm : term times factor\n                | term divide factor\n                | factorfactor : num\n                  | varid\n                  | lparen expression rparen'
+_lr_signature = "leftplusminuslefttimesdividerightUMINUSaleatorio colon comma comment concat const divide entrada equals escrever fim fold funcao lbracket lparen map minus num plus programa rbracket rparen semicolon string times var varidlista_declaracoes : declaracao\n                             | lista_declaracoes declaracaodeclaracao : declaracao_atribuicao\n                      | declaracao_expressao\n                      | declaracao_funcao\n                      | declaracao_escrever\n                      | declaracao_comentariodeclaracao_atribuicao : varid equals expressao ';'declaracao_expressao : expressao ';'declaracao_funcao : funcao varid '(' parametros ')' ',' ':' lista_declaracoes fimdeclaracao_escrever : escrever '(' expressao ')' ';'declaracao_comentario : commentlista_expressoes : expressao\n                            | lista_expressoes ',' expressaoexpressao : expressao concat expressaoexpressao : expressao plus expressao\n                     | expressao minus expressao\n                     | expressao times expressao\n                     | expressao divide expressao\n                     | '(' expressao ')'\n                     | '-' expressao %prec UMINUS\n                     | varid\n                     | num\n                     | string\n                     | '[' lista_expressoes ']'parametros : varid\n                      | parametros ',' varid"
     
-_lr_action_items = {'programa':([0,],[2,]),'$end':([1,9,11,12,13,18,28,30,],[0,-1,-6,-8,-9,-7,-11,-10,]),'varid':([2,4,5,6,7,9,10,11,12,13,14,17,18,20,27,28,30,31,32,33,34,36,],[3,8,-2,15,16,8,-3,-6,-8,-9,19,22,-7,-4,22,-11,-10,22,22,22,22,-5,]),'var':([3,4,5,10,20,36,],[6,6,-2,-3,-4,-5,]),'const':([3,4,5,10,20,36,],[7,7,-2,-3,-4,-5,]),'escrever':([4,5,9,10,11,12,13,18,20,28,30,36,],[14,-2,14,-3,-6,-8,-9,-7,-4,-11,-10,-5,]),'equals':([8,16,],[17,21,]),'semicolon':([15,19,22,23,24,25,26,29,37,38,39,40,41,],[20,28,-19,30,-14,-17,-18,36,-12,-13,-15,-16,-20,]),'num':([17,21,27,31,32,33,34,],[26,29,26,26,26,26,26,]),'lparen':([17,27,31,32,33,34,],[27,27,27,27,27,27,]),'times':([22,24,25,26,37,38,39,40,41,],[-19,33,-17,-18,33,33,-15,-16,-20,]),'divide':([22,24,25,26,37,38,39,40,41,],[-19,34,-17,-18,34,34,-15,-16,-20,]),'plus':([22,23,24,25,26,35,37,38,39,40,41,],[-19,31,-14,-17,-18,31,-12,-13,-15,-16,-20,]),'minus':([22,23,24,25,26,35,37,38,39,40,41,],[-19,32,-14,-17,-18,32,-12,-13,-15,-16,-20,]),'rparen':([22,24,25,26,35,37,38,39,40,41,],[-19,-14,-17,-18,41,-12,-13,-15,-16,-20,]),}
+_lr_action_items = {'varid':([0,1,2,3,4,5,6,7,10,11,13,14,17,18,19,20,21,22,23,24,25,29,39,43,44,50,51,54,55,56,],[8,8,-1,-3,-4,-5,-6,-7,26,28,-12,28,28,-2,28,-9,28,28,28,28,28,28,45,28,-8,53,-11,8,8,-10,]),'funcao':([0,1,2,3,4,5,6,7,13,18,20,44,51,54,55,56,],[10,10,-1,-3,-4,-5,-6,-7,-12,-2,-9,-8,-11,10,10,-10,]),'escrever':([0,1,2,3,4,5,6,7,13,18,20,44,51,54,55,56,],[12,12,-1,-3,-4,-5,-6,-7,-12,-2,-9,-8,-11,12,12,-10,]),'comment':([0,1,2,3,4,5,6,7,13,18,20,44,51,54,55,56,],[13,13,-1,-3,-4,-5,-6,-7,-12,-2,-9,-8,-11,13,13,-10,]),'(':([0,1,2,3,4,5,6,7,11,12,13,14,17,18,19,20,21,22,23,24,25,26,29,43,44,51,54,55,56,],[11,11,-1,-3,-4,-5,-6,-7,11,29,-12,11,11,-2,11,-9,11,11,11,11,11,39,11,11,-8,-11,11,11,-10,]),'-':([0,1,2,3,4,5,6,7,11,13,14,17,18,19,20,21,22,23,24,25,29,43,44,51,54,55,56,],[14,14,-1,-3,-4,-5,-6,-7,14,-12,14,14,-2,14,-9,14,14,14,14,14,14,14,-8,-11,14,14,-10,]),'num':([0,1,2,3,4,5,6,7,11,13,14,17,18,19,20,21,22,23,24,25,29,43,44,51,54,55,56,],[15,15,-1,-3,-4,-5,-6,-7,15,-12,15,15,-2,15,-9,15,15,15,15,15,15,15,-8,-11,15,15,-10,]),'string':([0,1,2,3,4,5,6,7,11,13,14,17,18,19,20,21,22,23,24,25,29,43,44,51,54,55,56,],[16,16,-1,-3,-4,-5,-6,-7,16,-12,16,16,-2,16,-9,16,16,16,16,16,16,16,-8,-11,16,16,-10,]),'[':([0,1,2,3,4,5,6,7,11,13,14,17,18,19,20,21,22,23,24,25,29,43,44,51,54,55,56,],[17,17,-1,-3,-4,-5,-6,-7,17,-12,17,17,-2,17,-9,17,17,17,17,17,17,17,-8,-11,17,17,-10,]),'$end':([1,2,3,4,5,6,7,13,18,20,44,51,56,],[0,-1,-3,-4,-5,-6,-7,-12,-2,-9,-8,-11,-10,]),'fim':([2,3,4,5,6,7,13,18,20,44,51,55,56,],[-1,-3,-4,-5,-6,-7,-12,-2,-9,-8,-11,56,-10,]),'equals':([8,],[19,]),';':([8,9,15,16,28,30,33,34,35,36,37,38,40,42,47,],[-22,20,-23,-24,-22,-21,44,-15,-16,-17,-18,-19,-20,-25,51,]),'concat':([8,9,15,16,27,28,30,32,33,34,35,36,37,38,40,41,42,48,],[-22,21,-23,-24,21,-22,-21,21,21,21,-16,-17,-18,-19,-20,21,-25,21,]),'plus':([8,9,15,16,27,28,30,32,33,34,35,36,37,38,40,41,42,48,],[-22,22,-23,-24,22,-22,-21,22,22,22,-16,-17,-18,-19,-20,22,-25,22,]),'minus':([8,9,15,16,27,28,30,32,33,34,35,36,37,38,40,41,42,48,],[-22,23,-23,-24,23,-22,-21,23,23,23,-16,-17,-18,-19,-20,23,-25,23,]),'times':([8,9,15,16,27,28,30,32,33,34,35,36,37,38,40,41,42,48,],[-22,24,-23,-24,24,-22,-21,24,24,24,24,24,-18,-19,-20,24,-25,24,]),'divide':([8,9,15,16,27,28,30,32,33,34,35,36,37,38,40,41,42,48,],[-22,25,-23,-24,25,-22,-21,25,25,25,25,25,-18,-19,-20,25,-25,25,]),')':([15,16,27,28,30,34,35,36,37,38,40,41,42,45,46,53,],[-23,-24,40,-22,-21,-15,-16,-17,-18,-19,-20,47,-25,-26,49,-27,]),']':([15,16,28,30,31,32,34,35,36,37,38,40,42,48,],[-23,-24,-22,-21,42,-13,-15,-16,-17,-18,-19,-20,-25,-14,]),',':([15,16,28,30,31,32,34,35,36,37,38,40,42,45,46,48,49,53,],[-23,-24,-22,-21,43,-13,-15,-16,-17,-18,-19,-20,-25,-26,50,-14,52,-27,]),':':([52,],[54,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'declarations':([3,],[4,]),'declaration':([3,4,],[5,10,]),'statements':([4,],[9,]),'statement':([4,9,],[11,18,]),'assignment':([4,9,],[12,12,]),'print_stmt':([4,9,],[13,13,]),'expression':([17,27,],[23,35,]),'term':([17,27,31,32,],[24,24,37,38,]),'factor':([17,27,31,32,33,34,],[25,25,25,25,39,40,]),}
+_lr_goto_items = {'lista_declaracoes':([0,54,],[1,55,]),'declaracao':([0,1,54,55,],[2,18,2,18,]),'declaracao_atribuicao':([0,1,54,55,],[3,3,3,3,]),'declaracao_expressao':([0,1,54,55,],[4,4,4,4,]),'declaracao_funcao':([0,1,54,55,],[5,5,5,5,]),'declaracao_escrever':([0,1,54,55,],[6,6,6,6,]),'declaracao_comentario':([0,1,54,55,],[7,7,7,7,]),'expressao':([0,1,11,14,17,19,21,22,23,24,25,29,43,54,55,],[9,9,27,30,32,33,34,35,36,37,38,41,48,9,9,]),'lista_expressoes':([17,],[31,]),'parametros':([39,],[46,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,25 +26,32 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> program","S'",1,None,None,None),
-  ('program -> programa varid declarations statements','program',4,'p_program','fca_grammar.py',22),
-  ('declarations -> declaration','declarations',1,'p_declarations','fca_grammar.py',26),
-  ('declarations -> declarations declaration','declarations',2,'p_declarations','fca_grammar.py',27),
-  ('declaration -> var varid semicolon','declaration',3,'p_declaration','fca_grammar.py',34),
-  ('declaration -> const varid equals num semicolon','declaration',5,'p_declaration','fca_grammar.py',35),
-  ('statements -> statement','statements',1,'p_statements','fca_grammar.py',42),
-  ('statements -> statements statement','statements',2,'p_statements','fca_grammar.py',43),
-  ('statement -> assignment','statement',1,'p_statement','fca_grammar.py',50),
-  ('statement -> print_stmt','statement',1,'p_statement','fca_grammar.py',51),
-  ('assignment -> varid equals expression semicolon','assignment',4,'p_assignment','fca_grammar.py',55),
-  ('print_stmt -> escrever varid semicolon','print_stmt',3,'p_print_stmt','fca_grammar.py',59),
-  ('expression -> expression plus term','expression',3,'p_expression','fca_grammar.py',63),
-  ('expression -> expression minus term','expression',3,'p_expression','fca_grammar.py',64),
-  ('expression -> term','expression',1,'p_expression','fca_grammar.py',65),
-  ('term -> term times factor','term',3,'p_term','fca_grammar.py',72),
-  ('term -> term divide factor','term',3,'p_term','fca_grammar.py',73),
-  ('term -> factor','term',1,'p_term','fca_grammar.py',74),
-  ('factor -> num','factor',1,'p_factor','fca_grammar.py',81),
-  ('factor -> varid','factor',1,'p_factor','fca_grammar.py',82),
-  ('factor -> lparen expression rparen','factor',3,'p_factor','fca_grammar.py',83),
+  ("S' -> lista_declaracoes","S'",1,None,None,None),
+  ('lista_declaracoes -> declaracao','lista_declaracoes',1,'p_lista_declaracoes','fca_grammar.py',34),
+  ('lista_declaracoes -> lista_declaracoes declaracao','lista_declaracoes',2,'p_lista_declaracoes','fca_grammar.py',35),
+  ('declaracao -> declaracao_atribuicao','declaracao',1,'p_declaracao','fca_grammar.py',44),
+  ('declaracao -> declaracao_expressao','declaracao',1,'p_declaracao','fca_grammar.py',45),
+  ('declaracao -> declaracao_funcao','declaracao',1,'p_declaracao','fca_grammar.py',46),
+  ('declaracao -> declaracao_escrever','declaracao',1,'p_declaracao','fca_grammar.py',47),
+  ('declaracao -> declaracao_comentario','declaracao',1,'p_declaracao','fca_grammar.py',48),
+  ('declaracao_atribuicao -> varid equals expressao ;','declaracao_atribuicao',4,'p_declaracao_atribuicao','fca_grammar.py',53),
+  ('declaracao_expressao -> expressao ;','declaracao_expressao',2,'p_declaracao_expressao','fca_grammar.py',58),
+  ('declaracao_funcao -> funcao varid ( parametros ) , : lista_declaracoes fim','declaracao_funcao',9,'p_declaracao_funcao','fca_grammar.py',63),
+  ('declaracao_escrever -> escrever ( expressao ) ;','declaracao_escrever',5,'p_declaracao_escrever','fca_grammar.py',68),
+  ('declaracao_comentario -> comment','declaracao_comentario',1,'p_declaracao_comentario','fca_grammar.py',73),
+  ('lista_expressoes -> expressao','lista_expressoes',1,'p_lista_expressoes','fca_grammar.py',78),
+  ('lista_expressoes -> lista_expressoes , expressao','lista_expressoes',3,'p_lista_expressoes','fca_grammar.py',79),
+  ('expressao -> expressao concat expressao','expressao',3,'p_expressao_concat','fca_grammar.py',88),
+  ('expressao -> expressao plus expressao','expressao',3,'p_expressao','fca_grammar.py',93),
+  ('expressao -> expressao minus expressao','expressao',3,'p_expressao','fca_grammar.py',94),
+  ('expressao -> expressao times expressao','expressao',3,'p_expressao','fca_grammar.py',95),
+  ('expressao -> expressao divide expressao','expressao',3,'p_expressao','fca_grammar.py',96),
+  ('expressao -> ( expressao )','expressao',3,'p_expressao','fca_grammar.py',97),
+  ('expressao -> - expressao','expressao',2,'p_expressao','fca_grammar.py',98),
+  ('expressao -> varid','expressao',1,'p_expressao','fca_grammar.py',99),
+  ('expressao -> num','expressao',1,'p_expressao','fca_grammar.py',100),
+  ('expressao -> string','expressao',1,'p_expressao','fca_grammar.py',101),
+  ('expressao -> [ lista_expressoes ]','expressao',3,'p_expressao','fca_grammar.py',102),
+  ('parametros -> varid','parametros',1,'p_parametros','fca_grammar.py',131),
+  ('parametros -> parametros , varid','parametros',3,'p_parametros','fca_grammar.py',132),
 ]
