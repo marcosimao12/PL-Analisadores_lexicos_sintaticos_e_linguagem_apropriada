@@ -1,12 +1,12 @@
 from fca_lexer import FCALexer
 import ply.yacc as yacc
- 
+
 class FCAGrammar:
     # Define a precedência dos operadores para resolver questões na gramática
     precedence = (
-        ('left', 'plus', 'minus'),  # Operadores de adição e subtração com associatividade à esquerda
-        ('left', 'times', 'divide'),  # Operadores de multiplicação e divisão com associatividade à esquerda
-        ('right', 'UMINUS'),  # Operador unário '-' (negativo) tem associatividade à direita
+        ('left', '+', '-'),  # Operadores de adição e subtração com associatividade à esquerda
+        ('left', '*', '/'),  # Operadores de multiplicação e divisão com associatividade à esquerda
+        ('right', 'UMINUS'),  # Operador unário de negação
     )
 
     # Constructor
@@ -50,7 +50,7 @@ class FCAGrammar:
 
     # Declaração com atribuição
     def p_declaracao_atribuicao(self, p):
-        """declaracao_atribuicao : varid equals expressao ';'"""
+        """declaracao_atribuicao : varid '=' expressao ';'"""
         p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
 
     # Declaração de expressão
@@ -60,7 +60,7 @@ class FCAGrammar:
 
     # Declaração de função
     def p_declaracao_funcao(self, p):
-        """declaracao_funcao : funcao varid '(' parametros ')' ',' ':' lista_declaracoes fim
+        """declaracao_funcao : funcao varid '(' parametros ')' ':' lista_declaracoes fim
                              | funcao varid '(' parametros ')' ',' ':' expressao ';'"""
         if len(p) == 10:  # Regra com múltiplas declarações e FIM
             p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}
@@ -92,41 +92,46 @@ class FCAGrammar:
         """expressao : expressao concat expressao"""
         p[0] = {'op': 'concat', 'args': [p[1], p[3]]}
 
-    # Expressão geral
-    def p_expressao(self, p):
-        """expressao : expressao '+' expressao
-                     | expressao '-' expressao
-                     | expressao '*' expressao
-                     | expressao '/' expressao
-                     | '(' expressao ')'
-                     | '-' expressao %prec UMINUS
-                     | varid
-                     | num
-                     | string
-                     | '[' lista_expressoes ']'"""
-        if len(p) == 4:
-            if p[2] == '+':
-                p[0] = {'op': '+', 'args': [p[1], p[3]]}
-            elif p[2] == '-':
-                p[0] = {'op': '-', 'args': [p[1], p[3]]}
-            elif p[2] == '*':
-                p[0] = {'op': '*', 'args': [p[1], p[3]]}
-            elif p[2] == '/':
-                p[0] = {'op': '/', 'args': [p[1], p[3]]}
-        elif len(p) == 3:
-            p[0] = {'op': 'neg', 'args': [p[2]]}
-        elif len(p) == 2:
-            if isinstance(p[1], int):
-                p[0] = {'op': 'literal', 'args': [p[1]]}
-            elif isinstance(p[1], str):
-                if p[1].startswith('"') and p[1].endswith('"'):
-                    p[0] = {'op': 'literal', 'args': [p[1][1:-1]]}
-                else:
-                    p[0] = {'op': 'literal', 'args': [p[1]]}
-            else:
-                p[0] = p[1]
-        elif isinstance(p[1], str):
-             p[0] = {'op': 'var', 'args': [p[1]]}
+    # Expressões específicas
+    def p_expressao_plus(self, p):
+        """expressao : expressao '+' expressao"""
+        p[0] = {'op': '+', 'args': [p[1], p[3]]}
+
+    def p_expressao_minus(self, p):
+        """expressao : expressao '-' expressao"""
+        p[0] = {'op': '-', 'args': [p[1], p[3]]}
+
+    def p_expressao_times(self, p):
+        """expressao : expressao '*' expressao"""
+        p[0] = {'op': '*', 'args': [p[1], p[3]]}
+
+    def p_expressao_divide(self, p):
+        """expressao : expressao '/' expressao"""
+        p[0] = {'op': '/', 'args': [p[1], p[3]]}
+
+    def p_expressao_group(self, p):
+        """expressao : '(' expressao ')'"""
+        p[0] = p[2]
+
+    def p_expressao_uminus(self, p):
+        """expressao : '-' expressao %prec UMINUS"""
+        p[0] = {'op': 'uminus', 'args': [p[2]]}
+
+    def p_expressao_var_id(self, p):
+        """expressao : varid"""
+        p[0] = {'var': p[1]}
+
+    def p_expressao_num(self, p):
+        """expressao : num"""
+        p[0] = {'op': 'literal', 'args': [p[1]]}
+
+    def p_expressao_string(self, p):
+        """expressao : string"""
+        p[0] = {'op': 'literal', 'args': [p[1]]}
+
+    def p_expressao_list(self, p):
+        """expressao : '[' lista_expressoes ']'"""
+        p[0] = p[2]
 
     # Parâmetros de função
     def p_parametros(self, p):
@@ -138,9 +143,9 @@ class FCAGrammar:
             p[1].append(p[3])
             p[0] = p[1]
 
-    
     def p_error(self, p):
         if p:
             print(f"Syntax error at '{p.value}'")
         else:
             print("Syntax error at EOF")
+   
