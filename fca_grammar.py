@@ -56,15 +56,15 @@ class FCAGrammar:
     # Declaração de expressão
     def p_declaracao_expressao(self, p):
         """declaracao_expressao : expressao ';'"""
-        p[0] = {'op': 'expressao', 'args': [p[1]]}
+        p[0] = p[1]
 
     # Declaração de função
     def p_declaracao_funcao(self, p):
         """declaracao_funcao : funcao varid '(' parametros ')' ':' lista_declaracoes fim
                              | funcao varid '(' parametros ')' ',' ':' expressao ';'"""
-        if len(p) == 10:  # Regra com múltiplas declarações e FIM
-            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}
-        else:  # Regra com expressão única e ponto e vírgula
+        if len(p) == 9:
+            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
+        else:
             p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}
 
     # Declaração de comando "escrever"
@@ -131,7 +131,7 @@ class FCAGrammar:
 
     def p_expressao_list(self, p):
         """expressao : '[' lista_expressoes ']'"""
-        p[0] = p[2]
+        p[0] = {'op': 'list', 'args': p[2]}
 
     # Parâmetros de função
     def p_parametros(self, p):
@@ -148,4 +148,4 @@ class FCAGrammar:
             print(f"Syntax error at '{p.value}'")
         else:
             print("Syntax error at EOF")
-   
+
