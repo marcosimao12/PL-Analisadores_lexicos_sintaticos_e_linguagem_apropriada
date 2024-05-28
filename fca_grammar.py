@@ -45,7 +45,8 @@ class FCAGrammar:
                       | declaracao_expressao
                       | declaracao_funcao
                       | declaracao_escrever
-                      | declaracao_comentario"""
+                      | declaracao_comentario
+                      | declaracao_multiplas_atribuicoes"""
         p[0] = p[1]
 
     # Declaração com atribuição
@@ -65,7 +66,7 @@ class FCAGrammar:
         if len(p) == 9:
             p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
         else:
-            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}
+            p[0] = {'op': 'funcao', 'args': [p[2], p[4], {'op': 'seq', 'args': [p[8]]}]}
 
     # Declaração de comando "escrever"
     def p_declaracao_escrever(self, p):
@@ -76,6 +77,26 @@ class FCAGrammar:
     def p_declaracao_comentario(self, p):
         """declaracao_comentario : comment"""
         p[0] = {'op': 'comentario', 'args': [p[1]]}
+
+    # Declaração de múltiplas atribuições
+    def p_declaracao_multiplas_atribuicoes(self, p):
+        """declaracao_multiplas_atribuicoes : lista_atribuicoes ';'"""
+        p[0] = {'op': 'seq', 'args': p[1]}
+
+    # Lista de atribuições
+    def p_lista_atribuicoes(self, p):
+        """lista_atribuicoes : atribuicao
+                             | lista_atribuicoes ',' atribuicao"""
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[1].append(p[3])
+            p[0] = p[1]
+
+    # Atribuição
+    def p_atribuicao(self, p):
+        """atribuicao : varid '=' expressao"""
+        p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
 
     # Lista de expressões
     def p_lista_expressoes(self, p):
@@ -133,6 +154,11 @@ class FCAGrammar:
         """expressao : '[' lista_expressoes ']'"""
         p[0] = {'op': 'list', 'args': p[2]}
 
+    # Adição da regra para chamada de função dentro de expressões
+    def p_expressao_chamada_funcao(self, p):
+        """expressao : varid '(' lista_expressoes ')'"""
+        p[0] = {'op': 'chamada_funcao', 'args': [p[1], p[3]]}
+
     # Parâmetros de função
     def p_parametros(self, p):
         """parametros : varid
@@ -148,4 +174,3 @@ class FCAGrammar:
             print(f"Syntax error at '{p.value}'")
         else:
             print("Syntax error at EOF")
-
