@@ -157,13 +157,26 @@ class FCAGrammar:
         p[0] = {'op': 'literal', 'args': [p[1]]}
 
     def p_expressao_list(self, p):
-        """expressao : '[' lista_expressoes ']'"""
-        p[0] = {'op': 'list', 'args': p[2]}
+        """expressao : '[' ']' 
+                     | '[' lista_expressoes ']'"""
+        if len(p) == 3:
+            p[0] = {'op': 'list', 'args': []}
+        else:
+            p[0] = {'op': 'list', 'args': p[2]}
 
     # Adição da regra para chamada de função dentro de expressões
     def p_expressao_chamada_funcao(self, p):
         """expressao : varid '(' lista_expressoes ')'"""
         p[0] = {'op': 'call_func', 'args': [p[1], p[3]]}
+
+    # Adição da regra para map e fold dentro de expressões
+    def p_expressao_map(self, p):
+        """expressao : map '(' varid ',' expressao ')'"""
+        p[0] = {'op': 'map', 'args': [{'var': p[3]}, p[5]]}
+
+    def p_expressao_fold(self, p):
+        """expressao : fold '(' varid ',' expressao ',' expressao ')'"""
+        p[0] = {'op': 'fold', 'args': [{'var': p[3]}, p[5], p[7]]}
 
     # Parâmetros de função
     def p_parametros(self, p):
