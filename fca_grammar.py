@@ -181,21 +181,18 @@ class FCAGrammar:
     # Parâmetros de função
     def p_parametros(self, p):
         """parametros : varid
-                      | parametros ',' varid"""
+                      | parametros ',' varid
+                      | '[' ']'
+                      | varid ':' varid '[' ']'"""
         if len(p) == 2:
             p[0] = [p[1]]
+        elif len(p) == 3:
+            p[0] = [[]]
+        elif len(p) == 6:
+            p[0] = [{'op': 'var_array', 'args': [p[1], p[3]]}]
         else:
             p[1].append(p[3])
             p[0] = p[1]
-
-    # Lista de parâmetros
-    def p_parametros_lista(self, p):
-        """parametros : '[' ']'
-                      | varid ':' varid '[' ']'"""
-        if len(p) == 3:
-            p[0] = []
-        else:
-            p[0] = [{'var': p[1]}, {'var': p[3]}]
 
     def p_error(self, p):
         if p:
