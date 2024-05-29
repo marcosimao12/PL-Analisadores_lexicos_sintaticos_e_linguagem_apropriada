@@ -188,6 +188,15 @@ class FCAGrammar:
             p[1].append(p[3])
             p[0] = p[1]
 
+    # Lista de parâmetros
+    def p_parametros_lista(self, p):
+        """parametros : '[' ']'
+                      | varid ':' varid '[' ']'"""
+        if len(p) == 3:
+            p[0] = []
+        else:
+            p[0] = [{'var': p[1]}, {'var': p[3]}]
+
     def p_error(self, p):
         if p:
             print(f"Syntax error at '{p.value}'")

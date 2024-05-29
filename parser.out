@@ -62,6 +62,8 @@ Rule 36    expressao -> map ( varid , expressao )
 Rule 37    expressao -> fold ( varid , expressao , expressao )
 Rule 38    parametros -> varid
 Rule 39    parametros -> parametros , varid
+Rule 40    parametros -> [ ]
+Rule 41    parametros -> varid : varid [ ]
 
 Terminals, with rules where they appear
 
@@ -72,11 +74,11 @@ Terminals, with rules where they appear
 ,                    : 13 14 19 22 36 37 37 39
 -                    : 25 29
 /                    : 27
-:                    : 12 13 14
+:                    : 12 13 14 41
 ;                    : 10 11 13 14 15 17
 =                    : 10 20
-[                    : 33 34
-]                    : 33 34
+[                    : 33 34 40 41
+]                    : 33 34 40 41
 aleatorio            : 
 colon                : 
 comma                : 
@@ -104,7 +106,7 @@ semicolon            :
 string               : 32
 times                : 
 var                  : 
-varid                : 10 12 13 14 20 30 35 36 37 38 39
+varid                : 10 12 13 14 20 30 35 36 37 38 39 41 41
 
 Nonterminals, with rules where they appear
 
@@ -1237,9 +1239,12 @@ state 52
     (14) declaracao_funcao_literal -> funcao varid ( . num ) , : expressao ;
     (38) parametros -> . varid
     (39) parametros -> . parametros , varid
+    (40) parametros -> . [ ]
+    (41) parametros -> . varid : varid [ ]
 
     num             shift and go to state 65
     varid           shift and go to state 63
+    [               shift and go to state 66
 
     parametros                     shift and go to state 64
 
@@ -1267,7 +1272,7 @@ state 54
     (26) expressao -> expressao . * expressao
     (27) expressao -> expressao . / expressao
 
-    )               shift and go to state 66
+    )               shift and go to state 67
     concat          shift and go to state 28
     +               shift and go to state 29
     -               shift and go to state 30
@@ -1287,7 +1292,7 @@ state 56
 
     (20) atribuicao -> varid . = expressao
 
-    =               shift and go to state 67
+    =               shift and go to state 68
 
 
 state 57
@@ -1333,20 +1338,20 @@ state 58
     map             shift and go to state 21
     fold            shift and go to state 22
 
-    expressao                      shift and go to state 68
+    expressao                      shift and go to state 69
 
 state 59
 
     (36) expressao -> map ( varid . , expressao )
 
-    ,               shift and go to state 69
+    ,               shift and go to state 70
 
 
 state 60
 
     (37) expressao -> fold ( varid . , expressao , expressao )
 
-    ,               shift and go to state 70
+    ,               shift and go to state 71
 
 
 state 61
@@ -1386,9 +1391,11 @@ state 62
 state 63
 
     (38) parametros -> varid .
+    (41) parametros -> varid . : varid [ ]
 
     )               reduce using rule 38 (parametros -> varid .)
     ,               reduce using rule 38 (parametros -> varid .)
+    :               shift and go to state 72
 
 
 state 64
@@ -1397,25 +1404,32 @@ state 64
     (13) declaracao_funcao -> funcao varid ( parametros . ) , : expressao ;
     (39) parametros -> parametros . , varid
 
-    )               shift and go to state 71
-    ,               shift and go to state 72
+    )               shift and go to state 73
+    ,               shift and go to state 74
 
 
 state 65
 
     (14) declaracao_funcao_literal -> funcao varid ( num . ) , : expressao ;
 
-    )               shift and go to state 73
+    )               shift and go to state 75
 
 
 state 66
 
-    (15) declaracao_escrever -> escrever ( expressao ) . ;
+    (40) parametros -> [ . ]
 
-    ;               shift and go to state 74
+    ]               shift and go to state 76
 
 
 state 67
+
+    (15) declaracao_escrever -> escrever ( expressao ) . ;
+
+    ;               shift and go to state 77
+
+
+state 68
 
     (20) atribuicao -> varid = . expressao
     (23) expressao -> . expressao concat expressao
@@ -1443,9 +1457,9 @@ state 67
     map             shift and go to state 21
     fold            shift and go to state 22
 
-    expressao                      shift and go to state 75
+    expressao                      shift and go to state 78
 
-state 68
+state 69
 
     (22) lista_expressoes -> lista_expressoes , expressao .
     (23) expressao -> expressao . concat expressao
@@ -1464,7 +1478,7 @@ state 68
     /               shift and go to state 32
 
 
-state 69
+state 70
 
     (36) expressao -> map ( varid , . expressao )
     (23) expressao -> . expressao concat expressao
@@ -1492,9 +1506,9 @@ state 69
     map             shift and go to state 21
     fold            shift and go to state 22
 
-    expressao                      shift and go to state 76
+    expressao                      shift and go to state 79
 
-state 70
+state 71
 
     (37) expressao -> fold ( varid , . expressao , expressao )
     (23) expressao -> . expressao concat expressao
@@ -1522,32 +1536,47 @@ state 70
     map             shift and go to state 21
     fold            shift and go to state 22
 
-    expressao                      shift and go to state 77
-
-state 71
-
-    (12) declaracao_funcao -> funcao varid ( parametros ) . : lista_declaracoes fim
-    (13) declaracao_funcao -> funcao varid ( parametros ) . , : expressao ;
-
-    :               shift and go to state 78
-    ,               shift and go to state 79
-
+    expressao                      shift and go to state 80
 
 state 72
 
-    (39) parametros -> parametros , . varid
+    (41) parametros -> varid : . varid [ ]
 
-    varid           shift and go to state 80
+    varid           shift and go to state 81
 
 
 state 73
 
-    (14) declaracao_funcao_literal -> funcao varid ( num ) . , : expressao ;
+    (12) declaracao_funcao -> funcao varid ( parametros ) . : lista_declaracoes fim
+    (13) declaracao_funcao -> funcao varid ( parametros ) . , : expressao ;
 
-    ,               shift and go to state 81
+    :               shift and go to state 82
+    ,               shift and go to state 83
 
 
 state 74
+
+    (39) parametros -> parametros , . varid
+
+    varid           shift and go to state 84
+
+
+state 75
+
+    (14) declaracao_funcao_literal -> funcao varid ( num ) . , : expressao ;
+
+    ,               shift and go to state 85
+
+
+state 76
+
+    (40) parametros -> [ ] .
+
+    )               reduce using rule 40 (parametros -> [ ] .)
+    ,               reduce using rule 40 (parametros -> [ ] .)
+
+
+state 77
 
     (15) declaracao_escrever -> escrever ( expressao ) ; .
 
@@ -1566,7 +1595,7 @@ state 74
     fim             reduce using rule 15 (declaracao_escrever -> escrever ( expressao ) ; .)
 
 
-state 75
+state 78
 
     (20) atribuicao -> varid = expressao .
     (23) expressao -> expressao . concat expressao
@@ -1584,7 +1613,7 @@ state 75
     /               shift and go to state 32
 
 
-state 76
+state 79
 
     (36) expressao -> map ( varid , expressao . )
     (23) expressao -> expressao . concat expressao
@@ -1593,7 +1622,7 @@ state 76
     (26) expressao -> expressao . * expressao
     (27) expressao -> expressao . / expressao
 
-    )               shift and go to state 82
+    )               shift and go to state 86
     concat          shift and go to state 28
     +               shift and go to state 29
     -               shift and go to state 30
@@ -1601,7 +1630,7 @@ state 76
     /               shift and go to state 32
 
 
-state 77
+state 80
 
     (37) expressao -> fold ( varid , expressao . , expressao )
     (23) expressao -> expressao . concat expressao
@@ -1610,7 +1639,7 @@ state 77
     (26) expressao -> expressao . * expressao
     (27) expressao -> expressao . / expressao
 
-    ,               shift and go to state 83
+    ,               shift and go to state 87
     concat          shift and go to state 28
     +               shift and go to state 29
     -               shift and go to state 30
@@ -1618,7 +1647,14 @@ state 77
     /               shift and go to state 32
 
 
-state 78
+state 81
+
+    (41) parametros -> varid : varid . [ ]
+
+    [               shift and go to state 88
+
+
+state 82
 
     (12) declaracao_funcao -> funcao varid ( parametros ) : . lista_declaracoes fim
     (1) lista_declaracoes -> . declaracao
@@ -1669,7 +1705,7 @@ state 78
     map             shift and go to state 21
     fold            shift and go to state 22
 
-    lista_declaracoes              shift and go to state 84
+    lista_declaracoes              shift and go to state 89
     declaracao                     shift and go to state 2
     declaracao_atribuicao          shift and go to state 3
     declaracao_expressao           shift and go to state 4
@@ -1682,14 +1718,14 @@ state 78
     lista_atribuicoes              shift and go to state 17
     atribuicao                     shift and go to state 23
 
-state 79
+state 83
 
     (13) declaracao_funcao -> funcao varid ( parametros ) , . : expressao ;
 
-    :               shift and go to state 85
+    :               shift and go to state 90
 
 
-state 80
+state 84
 
     (39) parametros -> parametros , varid .
 
@@ -1697,14 +1733,14 @@ state 80
     ,               reduce using rule 39 (parametros -> parametros , varid .)
 
 
-state 81
+state 85
 
     (14) declaracao_funcao_literal -> funcao varid ( num ) , . : expressao ;
 
-    :               shift and go to state 86
+    :               shift and go to state 91
 
 
-state 82
+state 86
 
     (36) expressao -> map ( varid , expressao ) .
 
@@ -1719,7 +1755,7 @@ state 82
     ,               reduce using rule 36 (expressao -> map ( varid , expressao ) .)
 
 
-state 83
+state 87
 
     (37) expressao -> fold ( varid , expressao , . expressao )
     (23) expressao -> . expressao concat expressao
@@ -1747,9 +1783,16 @@ state 83
     map             shift and go to state 21
     fold            shift and go to state 22
 
-    expressao                      shift and go to state 87
+    expressao                      shift and go to state 92
 
-state 84
+state 88
+
+    (41) parametros -> varid : varid [ . ]
+
+    ]               shift and go to state 93
+
+
+state 89
 
     (12) declaracao_funcao -> funcao varid ( parametros ) : lista_declaracoes . fim
     (2) lista_declaracoes -> lista_declaracoes . declaracao
@@ -1787,7 +1830,7 @@ state 84
     (19) lista_atribuicoes -> . lista_atribuicoes , atribuicao
     (20) atribuicao -> . varid = expressao
 
-    fim             shift and go to state 88
+    fim             shift and go to state 94
     varid           shift and go to state 10
     funcao          shift and go to state 12
     escrever        shift and go to state 15
@@ -1812,7 +1855,7 @@ state 84
     lista_atribuicoes              shift and go to state 17
     atribuicao                     shift and go to state 23
 
-state 85
+state 90
 
     (13) declaracao_funcao -> funcao varid ( parametros ) , : . expressao ;
     (23) expressao -> . expressao concat expressao
@@ -1840,9 +1883,9 @@ state 85
     map             shift and go to state 21
     fold            shift and go to state 22
 
-    expressao                      shift and go to state 89
+    expressao                      shift and go to state 95
 
-state 86
+state 91
 
     (14) declaracao_funcao_literal -> funcao varid ( num ) , : . expressao ;
     (23) expressao -> . expressao concat expressao
@@ -1870,9 +1913,9 @@ state 86
     map             shift and go to state 21
     fold            shift and go to state 22
 
-    expressao                      shift and go to state 90
+    expressao                      shift and go to state 96
 
-state 87
+state 92
 
     (37) expressao -> fold ( varid , expressao , expressao . )
     (23) expressao -> expressao . concat expressao
@@ -1881,7 +1924,7 @@ state 87
     (26) expressao -> expressao . * expressao
     (27) expressao -> expressao . / expressao
 
-    )               shift and go to state 91
+    )               shift and go to state 97
     concat          shift and go to state 28
     +               shift and go to state 29
     -               shift and go to state 30
@@ -1889,7 +1932,15 @@ state 87
     /               shift and go to state 32
 
 
-state 88
+state 93
+
+    (41) parametros -> varid : varid [ ] .
+
+    )               reduce using rule 41 (parametros -> varid : varid [ ] .)
+    ,               reduce using rule 41 (parametros -> varid : varid [ ] .)
+
+
+state 94
 
     (12) declaracao_funcao -> funcao varid ( parametros ) : lista_declaracoes fim .
 
@@ -1908,7 +1959,7 @@ state 88
     fim             reduce using rule 12 (declaracao_funcao -> funcao varid ( parametros ) : lista_declaracoes fim .)
 
 
-state 89
+state 95
 
     (13) declaracao_funcao -> funcao varid ( parametros ) , : expressao . ;
     (23) expressao -> expressao . concat expressao
@@ -1917,7 +1968,7 @@ state 89
     (26) expressao -> expressao . * expressao
     (27) expressao -> expressao . / expressao
 
-    ;               shift and go to state 92
+    ;               shift and go to state 98
     concat          shift and go to state 28
     +               shift and go to state 29
     -               shift and go to state 30
@@ -1925,7 +1976,7 @@ state 89
     /               shift and go to state 32
 
 
-state 90
+state 96
 
     (14) declaracao_funcao_literal -> funcao varid ( num ) , : expressao . ;
     (23) expressao -> expressao . concat expressao
@@ -1934,7 +1985,7 @@ state 90
     (26) expressao -> expressao . * expressao
     (27) expressao -> expressao . / expressao
 
-    ;               shift and go to state 93
+    ;               shift and go to state 99
     concat          shift and go to state 28
     +               shift and go to state 29
     -               shift and go to state 30
@@ -1942,7 +1993,7 @@ state 90
     /               shift and go to state 32
 
 
-state 91
+state 97
 
     (37) expressao -> fold ( varid , expressao , expressao ) .
 
@@ -1957,7 +2008,7 @@ state 91
     ,               reduce using rule 37 (expressao -> fold ( varid , expressao , expressao ) .)
 
 
-state 92
+state 98
 
     (13) declaracao_funcao -> funcao varid ( parametros ) , : expressao ; .
 
@@ -1976,7 +2027,7 @@ state 92
     fim             reduce using rule 13 (declaracao_funcao -> funcao varid ( parametros ) , : expressao ; .)
 
 
-state 93
+state 99
 
     (14) declaracao_funcao_literal -> funcao varid ( num ) , : expressao ; .
 
