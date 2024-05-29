@@ -44,6 +44,7 @@ class FCAGrammar:
         """declaracao : declaracao_atribuicao
                       | declaracao_expressao
                       | declaracao_funcao
+                      | declaracao_funcao_literal
                       | declaracao_escrever
                       | declaracao_comentario
                       | declaracao_multiplas_atribuicoes"""
@@ -66,7 +67,12 @@ class FCAGrammar:
         if len(p) == 9:
             p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
         else:
-            p[0] = {'op': 'funcao', 'args': [p[2], p[4], {'op': 'seq', 'args': [p[8]]}]}
+            p[0] = {'op': 'funcao', 'args': [p[2], p[4], [p[8]]]}
+
+    # Declaração de função com parâmetro literal
+    def p_declaracao_funcao_literal(self, p):
+        """declaracao_funcao_literal : funcao varid '(' num ')' ',' ':' expressao ';'"""
+        p[0] = {'op': 'funcao', 'args': [p[2], [p[4]], p[8]]}
 
     # Declaração de comando "escrever"
     def p_declaracao_escrever(self, p):
@@ -157,7 +163,7 @@ class FCAGrammar:
     # Adição da regra para chamada de função dentro de expressões
     def p_expressao_chamada_funcao(self, p):
         """expressao : varid '(' lista_expressoes ')'"""
-        p[0] = {'op': 'chamada_funcao', 'args': [p[1], p[3]]}
+        p[0] = {'op': 'call_func', 'args': [p[1], p[3]]}
 
     # Parâmetros de função
     def p_parametros(self, p):
