@@ -3,8 +3,8 @@ import ply.lex as lex
 class FCALexer:
     tokens = (
         "VARID", "NUM", "PLUS", "MINUS", "TIMES", "DIVIDE", "LPAREN", "RPAREN",
-        "EQUALS", "SEMICOLON", "COLON", "COMMA", "STRING", "PROGRAM", "INPUT", 
-        "RANDOM", "FUNC", "PRINT", "LBRACKET", "RBRACKET", "CONCAT", "VAR", "CONST", "MAP",
+        "EQUALS", "SEMICOLON", "COLON", "COMMA", "STRING", "PROGRAM", "ENTRADA", 
+        "ALEATORIO", "FUNC", "PRINT", "LBRACKET", "RBRACKET", "CONCAT", "VAR", "CONST", "MAP",
         "FOLD", "COMMENT", "END", "INTERPOLATION", "COMMENT_SINGLE_LINE", "COMMENT_MULTI_LINE",
     )
 
@@ -30,11 +30,11 @@ class FCALexer:
         r"[Pp][Rr][Oo][Gg][Rr][Aa][Mm][Aa]"
         return t
 
-    def t_INPUT(self, t):
+    def t_ENTRADA(self, t):
         r"[Ee][Nn][Tt][Rr][Aa][Dd][Aa]"
         return t
 
-    def t_RANDOM(self, t):
+    def t_ALEATORIO(self, t):
         r"[Aa][Ll][Ee][Aa][Tt][Oo][Rr][Ii][Oo]"
         return t
 
@@ -74,7 +74,7 @@ class FCALexer:
 
     # Define token for identifiers
     def t_VARID(self, t):
-        r"[a-zA-Z_][a-zA-Z0-9_]*"
+        r"[a-zA-Z_][a-zA-Z0-9_]*[?!]?"
         return t
 
     # Define token for numbers

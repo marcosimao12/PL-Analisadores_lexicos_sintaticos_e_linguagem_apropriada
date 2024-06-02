@@ -22,6 +22,8 @@ exemplos = [ # exemplos a avaliar de forma independente...
             "FUNCAO mais2( x ),: x + 2 ;\nFUNCAO soma( a, b ),: a + b ;\nlista1 = map( mais2, [] );\nlista2 = map( mais2, [ 1, 2, 3 ] );\nlista3 = fold( soma, [ 1, 2, 3 ], 0 );",
             "array = [1, 2, 3];",
             "FUNCAO somatorio( [] ),: 0 ;FUNCAO somatorio( x:xs[] ),: x + somatorio(xs) ;",
+            "valor = ENTRADA();" ,
+            "ate10 = ALEATORIO(10);" ,
             # PARTE EXTRA DO TRABALHO
             # "SE var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE var1 != var2:\nESCREVER(\"OLA2\");\nFIM",
             # "SE var1 == var2: \nESCREVER(\"OLA\");\nFIM",

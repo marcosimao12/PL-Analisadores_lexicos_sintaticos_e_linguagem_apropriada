@@ -181,8 +181,15 @@ class FCAGrammar:
             p[0] = {'op': 'list', 'args': p[2]}
 
     def p_expressao_chamada_funcao(self, p):
-        """expressao : VARID '(' lista_expressoes ')'"""
-        p[0] = {'op': 'call_func', 'args': [p[1], p[3]]}
+        """expressao : VARID '(' lista_expressoes ')'
+                     | ENTRADA '(' ')'
+                     | ALEATORIO '(' expressao ')'"""
+        if p.slice[1].type == 'VARID':
+            p[0] = {'op': 'call_func', 'args': [p[1], p[3]]}
+        elif p.slice[1].type == 'ENTRADA':
+            p[0] = {'op': 'entrada', 'args': []}
+        elif p.slice[1].type == 'ALEATORIO':
+            p[0] = {'op': 'aleatorio', 'args': [p[3]]}
 
     def p_expressao_map(self, p):
         """expressao : MAP '(' VARID ',' expressao ')'"""
