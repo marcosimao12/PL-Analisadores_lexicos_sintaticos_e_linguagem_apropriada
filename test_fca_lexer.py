@@ -56,6 +56,8 @@ exemplos = [  # exemplos a avaliar de forma independente...
     "-- = soma( 1, soma(2, 3 ))",
     "-- = soma( 1, 5)",
     "-- = 6",
+    """{- o marco e bonito 
+    o diogo cheira mal -}""",
     "FUNCAO somatorio( [] ),: 0 ;",
     """FUNCAO somatorio( x:xs ),: x + somatorio(xs) ;
         resultado = somatorio([1,2,3]);""",
