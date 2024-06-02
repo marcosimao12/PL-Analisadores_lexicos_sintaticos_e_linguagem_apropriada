@@ -26,8 +26,7 @@ exemplos = [ # exemplos a avaliar de forma independente...
             # "SE var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE var1 != var2:\nESCREVER(\"OLA2\");\nFIM",
             # "SE var1 == var2: \nESCREVER(\"OLA\");\nFIM",
             # "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE NEG var1 != var2:\nESCREVER(\"OLA2\");\nFIM",
-            # "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nFIM",
-            # Para ja o "se"e o "entao" nao estao a funcionar
+            # "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nFIM",           
             ]
 for frase in exemplos:
     print(f"----------------------")

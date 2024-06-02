@@ -12,17 +12,40 @@ class FCAGrammar:
     def __init__(self):
         self.yacc = None
         self.lexer = None
-        self.tokens = None
+        self.tokens = None 
 
-    def build(self, **kwargs):
-        self.lexer = FCALexer()
-        self.lexer.build(**kwargs)
-        self.tokens = self.lexer.tokens
-        self.yacc = yacc.yacc(module=self, **kwargs)
+    def build(self, **kwargs): # Função para criar o analisador sintático
+        self.lexer = FCALexer() # Cria o analisador léxico
+        self.lexer.build(**kwargs) # Cria o analisador léxico
+        self.tokens = self.lexer.tokens # Obtém a lista de tokens do analisador léxico
+        self.yacc = yacc.yacc(module=self, **kwargs) # Cria o analisador sintático
+ 
+    def parse(self, string):  # Função para analisar a string
+        self.lexer.input(string)  # Define a string de entrada
+        return self.yacc.parse(lexer=self.lexer.lexer)  # Chama o analisador sintático
 
-    def parse(self, string):
-        self.lexer.input(string)
-        return self.yacc.parse(lexer=self.lexer.lexer)
+    def processar_interpolacao(self, text): # Função para processar a interpolação de strings
+        result = [] # Inicializa a lista de partes da string
+        i = 0 # Inicializa o índice
+        while i < len(text): # Enquanto não chegar ao fim do texto
+            if text[i:i+2] == '#{': # Encontrou uma variável
+                j = i + 2
+                while j < len(text) and text[j] != '}': # Enquanto não encontrar um '}'
+                    j += 1
+                if j < len(text):  # Encontrou um '}' correspondente
+                    var_name = text[i+2:j] # Extrai o nome da variável
+                    result.append({'var': var_name}) # Adiciona a variável
+                    i = j + 1
+                else:  # Não encontrou um '}' correspondente
+                    result.append({'op': 'literal', 'args': [text[i:]]}) # Adiciona o restante do texto
+                    break
+            else:
+                j = i
+                while j < len(text) and text[j:j+2] != '#{': # Enquanto não encontrar uma variável
+                    j += 1  # Avança
+                result.append({'op': 'literal', 'args': [text[i:j]]}) # Adiciona a parte literal
+                i = j
+        return result
 
     # Regras de produção da gramática
 
@@ -45,9 +68,9 @@ class FCAGrammar:
                       | declaracao_multiplas_atribuicoes"""
         p[0] = p[1]
 
-    def p_declaracao_atribuicao(self, p):
-        """declaracao_atribuicao : VARID '=' expressao ';'"""
-        p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
+    def p_declaracao_atribuicao(self, p): 
+        """declaracao_atribuicao : VARID '=' expressao ';'""" # Regra de atribuição
+        p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]} # Cria um nó de atribuição
 
     def p_declaracao_expressao(self, p):
         """declaracao_expressao : expressao ';'"""
@@ -109,29 +132,13 @@ class FCAGrammar:
         """expressao : expressao CONCAT expressao"""
         p[0] = {'op': 'concat', 'args': [p[1], p[3]]}
 
-    # Expressão de interpolação
-    def p_expressao_interpolacao(self, p):
-        """expressao : interpolacao_partes"""
-        if len(p[1]) > 1:
-            p[0] = {'op': 'concat', 'args': p[1]}
+    def p_expressao_string(self, p):
+        """expressao : STRING"""
+        partes = self.processar_interpolacao(p[1])
+        if len(partes) == 1:
+            p[0] = partes[0]
         else:
-            p[0] = p[1][0]
-
-    def p_interpolacao_partes(self, p):
-        """interpolacao_partes : interpolacao_partes interpolacao_part
-                               | interpolacao_part"""
-        if len(p) == 3:
-            p[0] = p[1] + [p[2]]
-        else:
-            p[0] = [p[1]]
-
-    def p_interpolacao_part(self, p):
-        """interpolacao_part : STRING
-                             | INTERPOLATION"""
-        if p.slice[1].type == "STRING":
-            p[0] = {'op': 'string', 'args': [p[1]]}
-        else:
-            p[0] = {'var': p[1]}
+            p[0] = {'op': 'interpolacao', 'args': partes}
 
     def p_expressao_plus(self, p):
         """expressao : expressao '+' expressao"""
@@ -164,10 +171,6 @@ class FCAGrammar:
     def p_expressao_num(self, p):
         """expressao : NUM"""
         p[0] = {'op': 'literal', 'args': [p[1]]}
-
-    def p_expressao_string(self, p):
-        """expressao : STRING"""
-        p[0] = {'op': 'string', 'args': [p[1]]}
 
     def p_expressao_list(self, p):
         """expressao : '[' ']' 

@@ -15,9 +15,11 @@ from fca_lexer import FCALexer
 # ]
 
 exemplos = [  # exemplos a avaliar de forma independente... 
+    "ate10 = ALEATORIO(10);",
     "ESCREVER(valor);   -- conteudo de valor e apresentado",
     "ESCREVER(365 * 2); -- 730",
     "ESCREVER(\"Ola Mundo\"); -- Ola, Mundo!",
+    "valor = ENTRADA();",
     "curso = \"ESI\";",
     "ESCREVER(\"Ola, \"<> curso); -- Ola, ESI",
     "\"Hello, World!\"",
