@@ -19,7 +19,10 @@ class FCAEval:
         'interpolacao': lambda args: FCAEval._interpolacao(args),
         'entrada': lambda args: FCAEval._entrada(),
         'aleatorio': lambda args: FCAEval._aleatorio(args),
-        'funcao': lambda args: FCAEval._def_func(args)
+        'funcao': lambda args: FCAEval._def_func(args),
+        'var': lambda args: FCAEval._get_var(args),
+        'func_param': lambda args: args,  # Apenas retorna a lista de argumentos
+        'list': lambda args: args  # Suporte a listas
     }
 
     @staticmethod
@@ -29,24 +32,40 @@ class FCAEval:
         return value
 
     @staticmethod
+    def _get_var(args):
+        var_name = args[0]
+        if var_name in FCAEval.symbols:
+            return FCAEval.symbols[var_name]
+        else:
+            raise Exception(f"Undefined variable '{var_name}'")
+
+    @staticmethod
     def _call_function(args):
         func_name, func_args = args
         if func_name in FCAEval.functions:
             func_def = FCAEval.functions[func_name]
-            params, body = func_def['params'], func_def['body']
+            params, body = func_def['params']['args'], func_def['body']
             if len(params) != len(func_args):
                 raise Exception(f"Function '{func_name}' expected {len(params)} arguments but got {len(func_args)}")
+
             # Salvar o escopo atual e criar um novo escopo para a função
             old_symbols = FCAEval.symbols.copy()
             local_symbols = {}
+
+            # Avaliar argumentos e associar aos parâmetros
             for param, arg in zip(params, func_args):
-                local_symbols[param] = FCAEval.evaluate(arg)
+                local_symbols[param['args'][0]] = FCAEval.evaluate(arg)
+
+            # Atualizar o escopo para o escopo local da função
             FCAEval.symbols = local_symbols
+
             result = None
             for stmt in body:
                 result = FCAEval.evaluate(stmt)
+
             # Restaurar o escopo antigo
             FCAEval.symbols = old_symbols
+
             return result
         else:
             raise Exception(f"Undefined function '{func_name}'")
@@ -68,6 +87,10 @@ class FCAEval:
         for arg in args:
             result += str(arg)
         return result
+
+    @staticmethod
+    def _create_list(args):
+        return args
 
     @staticmethod
     def _entrada():
@@ -119,3 +142,4 @@ class FCAEval:
             raise Exception(f"error: local variable '{varid}' referenced before assignment")
 
         raise Exception('Undefined AST')
+

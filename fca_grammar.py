@@ -12,38 +12,38 @@ class FCAGrammar:
     def __init__(self):
         self.yacc = None
         self.lexer = None
-        self.tokens = None 
+        self.tokens = None
 
-    def build(self, **kwargs): # Função para criar o analisador sintático
-        self.lexer = FCALexer() # Cria o analisador léxico
-        self.lexer.build(**kwargs) # Cria o analisador léxico
-        self.tokens = self.lexer.tokens # Obtém a lista de tokens do analisador léxico
-        self.yacc = yacc.yacc(module=self, **kwargs) # Cria o analisador sintático
- 
-    def parse(self, string):  # Função para analisar a string
-        self.lexer.input(string)  # Define a string de entrada
-        return self.yacc.parse(lexer=self.lexer.lexer)  # Chama o analisador sintático
+    def build(self, **kwargs):
+        self.lexer = FCALexer()
+        self.lexer.build(**kwargs)
+        self.tokens = self.lexer.tokens
+        self.yacc = yacc.yacc(module=self, **kwargs)
 
-    def processar_interpolacao(self, text): # Função para processar a interpolação de strings
-        result = [] # Inicializa a lista de partes da string
-        i = 0 # Inicializa o índice
-        while i < len(text): # Enquanto não chegar ao fim do texto
-            if text[i:i+2] == '#{': # Encontrou uma variável
+    def parse(self, string):
+        self.lexer.input(string)
+        return self.yacc.parse(lexer=self.lexer.lexer)
+
+    def processar_interpolacao(self, text):
+        result = []
+        i = 0
+        while i < len(text):
+            if text[i:i+2] == '#{':
                 j = i + 2
-                while j < len(text) and text[j] != '}': # Enquanto não encontrar um '}'
+                while j < len(text) and text[j] != '}':
                     j += 1
                 if j < len(text):  # Encontrou um '}' correspondente
-                    var_name = text[i+2:j] # Extrai o nome da variável
-                    result.append({'var': var_name}) # Adiciona a variável
+                    var_name = text[i+2:j]
+                    result.append({'var': var_name})
                     i = j + 1
                 else:  # Não encontrou um '}' correspondente
-                    result.append({'op': 'literal', 'args': [text[i:]]}) # Adiciona o restante do texto
+                    result.append({'op': 'literal', 'args': [text[i:]]})
                     break
             else:
                 j = i
-                while j < len(text) and text[j:j+2] != '#{': # Enquanto não encontrar uma variável
-                    j += 1  # Avança
-                result.append({'op': 'literal', 'args': [text[i:j]]}) # Adiciona a parte literal
+                while j < len(text) and text[j:j+2] != '#{':
+                    j += 1
+                result.append({'op': 'literal', 'args': [text[i:j]]})
                 i = j
         return result
 
@@ -68,9 +68,9 @@ class FCAGrammar:
                       | declaracao_multiplas_atribuicoes"""
         p[0] = p[1]
 
-    def p_declaracao_atribuicao(self, p): 
-        """declaracao_atribuicao : VARID '=' expressao ';'""" # Regra de atribuição
-        p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]} # Cria um nó de atribuição
+    def p_declaracao_atribuicao(self, p):
+        """declaracao_atribuicao : VARID '=' expressao ';'"""
+        p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
 
     def p_declaracao_expressao(self, p):
         """declaracao_expressao : expressao ';'"""
@@ -80,13 +80,13 @@ class FCAGrammar:
         """declaracao_funcao : FUNC VARID '(' parametros ')' ':' lista_declaracoes END
                              | FUNC VARID '(' parametros ')' ',' ':' expressao ';'"""
         if len(p) == 9:
-            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
+            p[0] = {'op': 'funcao', 'args': [p[2], {'op': 'func_param', 'args': p[4]}, p[7]]}
         else:
-            p[0] = {'op': 'funcao', 'args': [p[2], p[4], [p[8]]]}
+            p[0] = {'op': 'funcao', 'args': [p[2], {'op': 'func_param', 'args': p[4]}, [p[8]]]}
 
     def p_declaracao_funcao_literal(self, p):
         """declaracao_funcao_literal : FUNC VARID '(' NUM ')' ',' ':' expressao ';'"""
-        p[0] = {'op': 'funcao', 'args': [p[2], [p[4]], p[8]]}
+        p[0] = {'op': 'funcao', 'args': [p[2], {'op': 'func_param', 'args': [{'op': 'var', 'args': [p[4]]}]}, p[8]]}
 
     def p_declaracao_escrever(self, p):
         """declaracao_escrever : PRINT '(' expressao ')' ';'"""
@@ -205,13 +205,13 @@ class FCAGrammar:
                       | '[' ']'
                       | VARID ':' VARID '[' ']'"""
         if len(p) == 2:
-            p[0] = [p[1]]
+            p[0] = [{'op': 'var', 'args': [p[1]]}]
         elif len(p) == 3:
-            p[0] = [[]]
+            p[0] = []
         elif len(p) == 6:
             p[0] = [{'op': 'var_array', 'args': [p[1], p[3]]}]
         else:
-            p[1].append(p[3])
+            p[1].append({'op': 'var', 'args': [p[3]]})
             p[0] = p[1]
 
     def p_error(self, p):
