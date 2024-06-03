@@ -25,27 +25,27 @@ class FCAGrammar:
         return self.yacc.parse(lexer=self.lexer.lexer)
 
     def processar_interpolacao(self, text):
-        result = []
-        i = 0
-        while i < len(text):
-            if text[i:i+2] == '#{':
-                j = i + 2
-                while j < len(text) and text[j] != '}':
-                    j += 1
+        result = [] # Lista de partes da string
+        i = 0 # Índice do caractere atual
+        while i < len(text): # Percorre o texto caractere a caractere
+            if text[i:i+2] == '#{': # Encontrou um '#{'
+                j = i + 2 # Avança para o próximo caractere
+                while j < len(text) and text[j] != '}': # Enquanto não encontrar um '}'
+                    j += 1 # Avança para o próximo caractere
                 if j < len(text):  # Encontrou um '}' correspondente
-                    var_name = text[i+2:j]
-                    result.append({'var': var_name})
-                    i = j + 1
+                    var_name = text[i+2:j] # Extrai o nome da variável
+                    result.append({'var': var_name}) # Adiciona a variável à lista de partes
+                    i = j + 1 # Avança para o próximo caractere
                 else:  # Não encontrou um '}' correspondente
-                    result.append({'op': 'literal', 'args': [text[i:]]})
-                    break
+                    result.append({'op': 'literal', 'args': [text[i:]]}) # Adiciona o restante da string à lista de partes
+                    break # Encerra o loop
             else:
                 j = i
-                while j < len(text) and text[j:j+2] != '#{':
-                    j += 1
-                result.append({'op': 'literal', 'args': [text[i:j]]})
-                i = j
-        return result
+                while j < len(text) and text[j:j+2] != '#{': # Enquanto não encontrar um '#{'
+                    j += 1 # Avança para o próximo caractere
+                result.append({'op': 'literal', 'args': [text[i:j]]}) # Adiciona a parte da string à lista de partes
+                i = j   # Avança para o próximo caractere
+        return result # Retorna a lista de partes da string
 
     # Regras de produção da gramática
 
@@ -77,16 +77,16 @@ class FCAGrammar:
         p[0] = p[1]
 
     def p_declaracao_funcao(self, p):
-        """declaracao_funcao : FUNC VARID '(' parametros ')' ':' lista_declaracoes END
+        """declaracao_funcao : FUNC VARID '(' parametros ')' ':' lista_declaracoes END 
                              | FUNC VARID '(' parametros ')' ',' ':' expressao ';'"""
         if len(p) == 9:
-            p[0] = {'op': 'funcao', 'args': [p[2], {'op': 'func_param', 'args': p[4]}, p[7]]}
+            p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': p[4], 'corpo': p[7]} 
         else:
-            p[0] = {'op': 'funcao', 'args': [p[2], {'op': 'func_param', 'args': p[4]}, [p[8]]]}
+            p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': p[4], 'corpo': p[8]}
 
     def p_declaracao_funcao_literal(self, p):
         """declaracao_funcao_literal : FUNC VARID '(' NUM ')' ',' ':' expressao ';'"""
-        p[0] = {'op': 'funcao', 'args': [p[2], {'op': 'func_param', 'args': [{'op': 'var', 'args': [p[4]]}]}, p[8]]}
+        p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': [{'var': p[4]}], 'corpo': p[8]}
 
     def p_declaracao_escrever(self, p):
         """declaracao_escrever : PRINT '(' expressao ')' ';'"""
@@ -205,13 +205,13 @@ class FCAGrammar:
                       | '[' ']'
                       | VARID ':' VARID '[' ']'"""
         if len(p) == 2:
-            p[0] = [{'op': 'var', 'args': [p[1]]}]
+            p[0] = [{'var': p[1]}]
         elif len(p) == 3:
             p[0] = []
         elif len(p) == 6:
             p[0] = [{'op': 'var_array', 'args': [p[1], p[3]]}]
         else:
-            p[1].append({'op': 'var', 'args': [p[3]]})
+            p[1].append({'var': p[3]})
             p[0] = p[1]
 
     def p_error(self, p):

@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "fca_main.py",
+            "console": "integratedTerminal",
+            "args": ["EXEMPLOS_TESTE/exemplo-C-01.fca"]
+        }
+    ]
+}
