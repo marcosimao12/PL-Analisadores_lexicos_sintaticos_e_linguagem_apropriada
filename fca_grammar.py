@@ -86,7 +86,7 @@ class FCAGrammar:
 
     def p_declaracao_funcao_literal(self, p):
         """declaracao_funcao_literal : FUNC VARID '(' NUM ')' ',' ':' expressao ';'"""
-        p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': [{'var': p[4]}], 'corpo': p[8]}
+        p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': [{'op': 'literal', 'args': [p[4]]}], 'corpo': p[8]}
 
     def p_declaracao_escrever(self, p):
         """declaracao_escrever : PRINT '(' expressao ')' ';'"""

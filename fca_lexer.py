@@ -97,10 +97,10 @@ class FCALexer:
     # Define tokens for function definitions
     def t_FUNC_DEF(self, t):
         r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*,:"
-        t.type = "FUNC"
+        t.type = "FUNC" 
         return t
 
-    def t_FUNC_DEF_MULTILINE(self, t):
+    def t_FUNC_DEF_MULTILINE(self, t): 
         r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*:"
         t.type = "FUNC"
         return t

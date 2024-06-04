@@ -3,10 +3,10 @@ class FCAEval:
     functions = {}
 
     operators = {
-        '+': lambda args: args[0] + args[1],
-        '-': lambda args: args[0] - args[1],
-        '*': lambda args: args[0] * args[1],
-        '/': lambda args: args[0] / args[1],
+        '+':            lambda args: args[0] + args[1],
+        '-':            lambda args: args[0] - args[1],
+        '*':            lambda args: args[0] * args[1],
+        '/':            lambda args: args[0] / args[1],
         'concat':       lambda args: ''.join(args),
         'seq':          lambda args: args[-1],
         'atribuicao':   lambda args: FCAEval._assign(args),
@@ -39,31 +39,48 @@ class FCAEval:
             raise Exception(f"Undefined variable '{var_name}'")
 
     @staticmethod
+    def _def_func(body, params, args):
+        func_name = args[0]
+        params = params
+        body = body
+        if func_name not in FCAEval.functions:
+            FCAEval.functions[func_name] = []
+        FCAEval.functions[func_name].append({'parametros': params, 'corpo': body})
+        return None
+
+    @staticmethod
     def _call_function(args):
         func_name, func_args = args
         if func_name in FCAEval.functions:
-            func_def = FCAEval.functions[func_name] 
-            params, body = func_def['parametros'], func_def['corpo'] 
-            if len(params) != len(func_args):
-                raise Exception(f"Function '{func_name}' expected {len(params)} arguments but got {len(func_args)}")
+            # Iterate over all definitions of the function
+            for func_def in FCAEval.functions[func_name]:
+                params, body = func_def['parametros'], func_def['corpo']
+                if len(params) == len(func_args):
+                    # Save current scope and create a new scope for the function
+                    old_symbols = FCAEval.symbols.copy()
+                    local_symbols = old_symbols.copy()
 
-            # Salvar o escopo atual e criar um novo escopo para a função
-            old_symbols = FCAEval.symbols.copy()
-            local_symbols = {}
+                    # Evaluate arguments and bind to parameters
+                    for param, arg in zip(params, func_args):
+                        if 'var' in param:
+                            local_symbols[param['var']] = FCAEval.evaluate(arg)
+                        elif 'op' in param and param['op'] == 'literal' and FCAEval.evaluate(param) == FCAEval.evaluate(arg):
+                            continue
+                        else:
+                            break
+                    else:                 
+                        # Update the scope to the local scope of the function
+                        FCAEval.symbols = local_symbols
 
-            # Avaliar argumentos e associar aos parâmetros
-            for param, arg in zip(params, func_args):
-                local_symbols[param['var']] = FCAEval.evaluate(arg)
+                        result = FCAEval.evaluate(body)
 
-            # Atualizar o escopo para o escopo local da função
-            FCAEval.symbols = local_symbols
+                        # Restore the old scope
+                        FCAEval.symbols = old_symbols
 
-            result = FCAEval.evaluate(body)
-
-            # Restaurar o escopo antigo
-            FCAEval.symbols = old_symbols
-
-            return result
+                        return result
+        
+            # If no matching function definition is found
+            raise Exception(f"Function '{func_name}' with {len(func_args)} parameters not defined")
         else:
             raise Exception(f"Undefined function '{func_name}'")
 
@@ -95,14 +112,6 @@ class FCAEval:
         return random.randint(0, args[0])
 
     @staticmethod
-    def _def_func(body, params, args):
-        func_name = args[0]
-        params = params
-        body = body
-        FCAEval.functions[func_name] = {'parametros': params, 'corpo': body}
-        return None
-
-    @staticmethod
     def evaluate(ast):
         if isinstance(ast, int):  # constant value
             return ast
@@ -113,7 +122,7 @@ class FCAEval:
         if isinstance(ast, list):  # sequence of statements
             result = []
             for stmt in ast:
-                result.append(stmt) # evaluate each statement
+                result.append(FCAEval.evaluate(stmt)) # evaluate each statement
             return result
         raise Exception(f"Unknown AST type: {type(ast)}")   
 
@@ -137,3 +146,4 @@ class FCAEval:
             raise Exception(f"error: local variable '{varid}' referenced before assignment")
 
         raise Exception('Undefined AST')
+
