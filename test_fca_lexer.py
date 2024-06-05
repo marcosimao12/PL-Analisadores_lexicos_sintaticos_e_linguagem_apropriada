@@ -1,20 +1,20 @@
 from fca_lexer import FCALexer
-
-# exemplos = [  # exemplos a avaliar de forma independente... 
+ 
+# exemplos = [  # exemplos a avaliar de forma independente...
 #     "ESCREVER(valor);   -- conteudo de valor e apresentado",
 #     "ESCREVER(365 * 2); -- 730",
 #     "ESCREVER(\"Ola Mundo\"); -- Ola, Mundo!",
 #     "curso = \"ESI\";",
 #     "ESCREVER(\"Ola, \"<> curso); -- Ola, ESI",
-#     """ x = 10  ; 
+#     """ x = 10  ;
 #     y = 10 + 20 * 30;
-#     z = x * 100 ; 
+#     z = x * 100 ;
 #     b =  a + 1 ; """,
 #     "x = 5 + 3 * (2 + 1);",
 #     "\"Hello, World!\"",
 # ]
-
-exemplos = [  # exemplos a avaliar de forma independente... 
+ 
+exemplos = [  # exemplos a avaliar de forma independente...
     "ate10 = ALEATORIO(10);",
     "ESCREVER(valor);   -- conteudo de valor e apresentado",
     "ESCREVER(365 * 2); -- 730",
@@ -58,13 +58,13 @@ exemplos = [  # exemplos a avaliar de forma independente...
     "-- = soma( 1, soma(2, 3 ))",
     "-- = soma( 1, 5)",
     "-- = 6",
-    """{- o marco e bonito 
+    """{- o marco e bonito
     o diogo cheira mal -}""",
     "FUNCAO somatorio( [] ),: 0 ;",
     """FUNCAO somatorio( x:xs ),: x + somatorio(xs) ;
         resultado = somatorio([1,2,3]);""",
 ]
-
+ 
 for frase in exemplos:
     print(f"----------------------")
     print(f"frase: '{frase}'")
@@ -78,3 +78,4 @@ for frase in exemplos:
             break
         print(tk_type, end=" ")
     print()
+ 
