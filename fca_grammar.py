@@ -206,7 +206,7 @@ class FCAGrammar:
         if len(p) == 2:
             p[0] = [{'var': p[1]}]
         elif len(p) == 3:
-            p[0] = []
+            p[0] = [{'op': 'array_vazio', 'args': []}]
         else:
             p[1].append({'var': p[3]})
             p[0] = p[1]
