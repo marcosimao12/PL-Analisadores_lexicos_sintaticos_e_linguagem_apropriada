@@ -1,5 +1,5 @@
 # fca_main.py
-from fca_grammar import FCAGrammar
+from fca_grammar import FCAGrammar  # Importa a classe FCAGrammar
 from fca_eval import FCAEval
 import sys
 from pprint import PrettyPrinter
