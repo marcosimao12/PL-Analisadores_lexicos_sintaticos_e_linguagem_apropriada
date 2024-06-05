@@ -202,17 +202,18 @@ class FCAGrammar:
     def p_parametros(self, p):
         """parametros : VARID
                       | parametros ',' VARID
-                      | '[' ']'
-                      | VARID ':' VARID """
+                      | '[' ']' """
         if len(p) == 2:
             p[0] = [{'var': p[1]}]
         elif len(p) == 3:
             p[0] = []
-        elif len(p) == 4:
-            p[0] = [{'op': 'var_array', 'args': [p[1], p[3]]}]
         else:
             p[1].append({'var': p[3]})
             p[0] = p[1]
+            
+    def p_parametro_id_array(self, p):
+        """parametros : VARID ':' VARID """
+        p[0] = [{'op': 'var_array', 'args': [p[1], p[3]]}]
 
     def p_error(self, p):
         if p:

@@ -21,7 +21,7 @@ class FCAEval:
         'aleatorio':    lambda args: FCAEval._aleatorio(args),
         'var':          lambda args: FCAEval._get_var(args),
         'func_param':   lambda args: args,  # Apenas retorna a lista de argumentos
-        'list':         lambda args: args  # Suporte a listas
+        'list':         lambda args: args,  # Suporte a listas
     }
 
     @staticmethod
@@ -59,19 +59,30 @@ class FCAEval:
                     # Save current scope and create a new scope for the function
                     old_symbols = FCAEval.symbols.copy()
                     local_symbols = old_symbols.copy()
-
+                    
                     # Evaluate arguments and bind to parameters
                     for param, arg in zip(params, func_args):
                         if 'var' in param:
                             local_symbols[param['var']] = FCAEval.evaluate(arg)
+                        elif 'op' in param and param['op'] == 'var_array':
+                            array = func_args[0]
+                            print(f"{param} {arg}")
+                            if len(array) > 0:
+                                local_symbols[param['args'][0]] = array[0]
+                                local_symbols[param['args'][1]] = array[1:]
+                            else:
+                                local_symbols[param[0]['var']] = []
                         elif 'op' in param and param['op'] == 'literal' and FCAEval.evaluate(param) == FCAEval.evaluate(arg):
                             continue
+                            # Logica pegar o 1º valor do array e meter o args[0] 
+                            # Colocaro resto do array no args[1]
+                            # Chamar o evaluate
                         else:
                             break
                     else:                   
                         # Update the scope to the local scope of the function
                         FCAEval.symbols = local_symbols
-
+                        
                         result = FCAEval.evaluate(body)
 
                         # Restore the old scope
