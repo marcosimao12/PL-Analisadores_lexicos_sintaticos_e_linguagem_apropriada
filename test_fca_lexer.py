@@ -59,7 +59,7 @@ exemplos = [  # exemplos a avaliar de forma independente...
     "-- = soma( 1, 5)",
     "-- = 6",
     """{- o marco e bonito
-    o diogo cheira mal -}""",
+    e o jonas tambem -}""",
     "FUNCAO somatorio( [] ),: 0 ;",
     """FUNCAO somatorio( x:xs ),: x + somatorio(xs) ;
         resultado = somatorio([1,2,3]);""",
