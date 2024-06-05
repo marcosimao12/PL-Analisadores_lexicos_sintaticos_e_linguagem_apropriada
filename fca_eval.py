@@ -62,6 +62,7 @@ class FCAEval:
                     
                     # Evaluate arguments and bind to parameters
                     for param, arg in zip(params, func_args):
+                        print(f'DEBUG PARAM: {param} == {type(arg)}')
                         if 'var' in param:
                             local_symbols[param['var']] = FCAEval.evaluate(arg)
                         elif 'op' in param and param['op'] == 'var_array':
