@@ -68,7 +68,7 @@ class FCAEval:
                             continue
                         else:
                             break
-                    else:                 
+                    else:                   
                         # Update the scope to the local scope of the function
                         FCAEval.symbols = local_symbols
 
@@ -83,17 +83,22 @@ class FCAEval:
             raise Exception(f"Function '{func_name}' with {len(func_args)} parameters not defined")
         else:
             raise Exception(f"Undefined function '{func_name}'")
-
+        
     @staticmethod
     def _map_function(args):
         func, lst = args
-        return list(map(lambda x: FCAEval.evaluate({'op': 'call_func', 'args': [func['var'], [x]]}), lst))
+        return list(map(lambda x: FCAEval.evaluate({'op': 'call_func', 'args': [func, [x]]}), lst))
+    
 
     @staticmethod
     def _fold_function(args):
-        func, lst, initial = args
-        from functools import reduce
-        return reduce(lambda acc, x: FCAEval.evaluate({'op': 'call_func', 'args': [func['var'], [acc, x]]}), lst, initial)
+        func = args[0]
+        array = args[1]
+        initial = args[2]
+        result = initial
+        for element in array:
+            result = FCAEval._call_function([func, [result, element]])
+        return result
 
     @staticmethod
     def _interpolacao(args):
@@ -130,6 +135,12 @@ class FCAEval:
     def _eval_operator(ast):
         if 'op' in ast and ast['op'] == 'funcao': # function definition
             return FCAEval._def_func(ast['corpo'], ast['parametros'], ast['args']) # define function
+        #FAZER A CHAMADA DA FUNCAO MAP E FOLD
+        # if 'op' in ast and ast['op'] == 'map':
+        #     return FCAEval._map_function(ast['args'])
+        
+        # if 'op' in ast and ast['op'] == 'fold': # function definition
+        #     return FCAEval._fold_function(ast['args'])
         if 'op' in ast: # operator
             op = ast["op"] # operator name
             args = [FCAEval.evaluate(a) for a in ast['args']] # evaluate arguments
@@ -137,7 +148,7 @@ class FCAEval:
                 func = FCAEval.operators[op] # get operator function
                 return func(args)
             else:
-                raise Exception(f"Unknown operator {op}")
+                raise Exception(f"Unknown operator {op}")\
 
         if 'var' in ast:
             varid = ast["var"]

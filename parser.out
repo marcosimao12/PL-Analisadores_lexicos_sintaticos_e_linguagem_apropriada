@@ -66,7 +66,7 @@ Rule 40    expressao -> FOLD ( VARID , expressao , expressao )
 Rule 41    parametros -> VARID
 Rule 42    parametros -> parametros , VARID
 Rule 43    parametros -> [ ]
-Rule 44    parametros -> VARID : VARID [ ]
+Rule 44    parametros -> VARID : VARID
 
 Terminals, with rules where they appear
 
@@ -110,8 +110,8 @@ STRING               : 25
 TIMES                : 
 VAR                  : 
 VARID                : 10 12 13 14 21 32 36 39 40 41 42 44 44
-[                    : 34 35 43 44
-]                    : 34 35 43 44
+[                    : 34 35 43
+]                    : 34 35 43
 error                : 
 
 Nonterminals, with rules where they appear
@@ -1410,7 +1410,7 @@ state 57
     (41) parametros -> . VARID
     (42) parametros -> . parametros , VARID
     (43) parametros -> . [ ]
-    (44) parametros -> . VARID : VARID [ ]
+    (44) parametros -> . VARID : VARID
 
     NUM             shift and go to state 72
     VARID           shift and go to state 70
@@ -1600,7 +1600,7 @@ state 69
 state 70
 
     (41) parametros -> VARID .
-    (44) parametros -> VARID . : VARID [ ]
+    (44) parametros -> VARID . : VARID
 
     )               reduce using rule 41 (parametros -> VARID .)
     ,               reduce using rule 41 (parametros -> VARID .)
@@ -1776,7 +1776,7 @@ state 79
 
 state 80
 
-    (44) parametros -> VARID : . VARID [ ]
+    (44) parametros -> VARID : . VARID
 
     VARID           shift and go to state 89
 
@@ -1888,9 +1888,10 @@ state 88
 
 state 89
 
-    (44) parametros -> VARID : VARID . [ ]
+    (44) parametros -> VARID : VARID .
 
-    [               shift and go to state 96
+    )               reduce using rule 44 (parametros -> VARID : VARID .)
+    ,               reduce using rule 44 (parametros -> VARID : VARID .)
 
 
 state 90
@@ -1950,7 +1951,7 @@ state 90
     MAP             shift and go to state 24
     FOLD            shift and go to state 25
 
-    lista_declaracoes              shift and go to state 97
+    lista_declaracoes              shift and go to state 96
     declaracao                     shift and go to state 2
     declaracao_atribuicao          shift and go to state 3
     declaracao_expressao           shift and go to state 4
@@ -1967,7 +1968,7 @@ state 91
 
     (13) declaracao_funcao -> FUNC VARID ( parametros ) , . : expressao ;
 
-    :               shift and go to state 98
+    :               shift and go to state 97
 
 
 state 92
@@ -1982,7 +1983,7 @@ state 93
 
     (14) declaracao_funcao_literal -> FUNC VARID ( NUM ) , . : expressao ;
 
-    :               shift and go to state 99
+    :               shift and go to state 98
 
 
 state 94
@@ -2032,16 +2033,9 @@ state 95
     MAP             shift and go to state 24
     FOLD            shift and go to state 25
 
-    expressao                      shift and go to state 100
+    expressao                      shift and go to state 99
 
 state 96
-
-    (44) parametros -> VARID : VARID [ . ]
-
-    ]               shift and go to state 101
-
-
-state 97
 
     (12) declaracao_funcao -> FUNC VARID ( parametros ) : lista_declaracoes . END
     (2) lista_declaracoes -> lista_declaracoes . declaracao
@@ -2082,7 +2076,7 @@ state 97
     (20) lista_atribuicoes -> . lista_atribuicoes , atribuicao
     (21) atribuicao -> . VARID = expressao
 
-    END             shift and go to state 102
+    END             shift and go to state 100
     VARID           shift and go to state 10
     FUNC            shift and go to state 12
     PRINT           shift and go to state 15
@@ -2110,7 +2104,7 @@ state 97
     lista_atribuicoes              shift and go to state 18
     atribuicao                     shift and go to state 26
 
-state 98
+state 97
 
     (13) declaracao_funcao -> FUNC VARID ( parametros ) , : . expressao ;
     (24) expressao -> . expressao CONCAT expressao
@@ -2142,9 +2136,9 @@ state 98
     MAP             shift and go to state 24
     FOLD            shift and go to state 25
 
-    expressao                      shift and go to state 103
+    expressao                      shift and go to state 101
 
-state 99
+state 98
 
     (14) declaracao_funcao_literal -> FUNC VARID ( NUM ) , : . expressao ;
     (24) expressao -> . expressao CONCAT expressao
@@ -2176,9 +2170,9 @@ state 99
     MAP             shift and go to state 24
     FOLD            shift and go to state 25
 
-    expressao                      shift and go to state 104
+    expressao                      shift and go to state 102
 
-state 100
+state 99
 
     (40) expressao -> FOLD ( VARID , expressao , expressao . )
     (24) expressao -> expressao . CONCAT expressao
@@ -2187,7 +2181,7 @@ state 100
     (28) expressao -> expressao . * expressao
     (29) expressao -> expressao . / expressao
 
-    )               shift and go to state 105
+    )               shift and go to state 103
     CONCAT          shift and go to state 31
     +               shift and go to state 32
     -               shift and go to state 33
@@ -2195,15 +2189,7 @@ state 100
     /               shift and go to state 35
 
 
-state 101
-
-    (44) parametros -> VARID : VARID [ ] .
-
-    )               reduce using rule 44 (parametros -> VARID : VARID [ ] .)
-    ,               reduce using rule 44 (parametros -> VARID : VARID [ ] .)
-
-
-state 102
+state 100
 
     (12) declaracao_funcao -> FUNC VARID ( parametros ) : lista_declaracoes END .
 
@@ -2225,7 +2211,7 @@ state 102
     END             reduce using rule 12 (declaracao_funcao -> FUNC VARID ( parametros ) : lista_declaracoes END .)
 
 
-state 103
+state 101
 
     (13) declaracao_funcao -> FUNC VARID ( parametros ) , : expressao . ;
     (24) expressao -> expressao . CONCAT expressao
@@ -2234,7 +2220,7 @@ state 103
     (28) expressao -> expressao . * expressao
     (29) expressao -> expressao . / expressao
 
-    ;               shift and go to state 106
+    ;               shift and go to state 104
     CONCAT          shift and go to state 31
     +               shift and go to state 32
     -               shift and go to state 33
@@ -2242,7 +2228,7 @@ state 103
     /               shift and go to state 35
 
 
-state 104
+state 102
 
     (14) declaracao_funcao_literal -> FUNC VARID ( NUM ) , : expressao . ;
     (24) expressao -> expressao . CONCAT expressao
@@ -2251,7 +2237,7 @@ state 104
     (28) expressao -> expressao . * expressao
     (29) expressao -> expressao . / expressao
 
-    ;               shift and go to state 107
+    ;               shift and go to state 105
     CONCAT          shift and go to state 31
     +               shift and go to state 32
     -               shift and go to state 33
@@ -2259,7 +2245,7 @@ state 104
     /               shift and go to state 35
 
 
-state 105
+state 103
 
     (40) expressao -> FOLD ( VARID , expressao , expressao ) .
 
@@ -2274,7 +2260,7 @@ state 105
     ,               reduce using rule 40 (expressao -> FOLD ( VARID , expressao , expressao ) .)
 
 
-state 106
+state 104
 
     (13) declaracao_funcao -> FUNC VARID ( parametros ) , : expressao ; .
 
@@ -2296,7 +2282,7 @@ state 106
     END             reduce using rule 13 (declaracao_funcao -> FUNC VARID ( parametros ) , : expressao ; .)
 
 
-state 107
+state 105
 
     (14) declaracao_funcao_literal -> FUNC VARID ( NUM ) , : expressao ; .
 

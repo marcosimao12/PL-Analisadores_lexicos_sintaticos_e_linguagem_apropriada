@@ -193,22 +193,22 @@ class FCAGrammar:
 
     def p_expressao_map(self, p):
         """expressao : MAP '(' VARID ',' expressao ')'"""
-        p[0] = {'op': 'map', 'args': [{'var': p[3]}, p[5]]}
+        p[0] = {'op': 'map', 'args': [p[3], p[5]]}
 
     def p_expressao_fold(self, p):
         """expressao : FOLD '(' VARID ',' expressao ',' expressao ')'"""
-        p[0] = {'op': 'fold', 'args': [{'var': p[3]}, p[5], p[7]]}
+        p[0] = {'op': 'fold', 'args': [p[3], p[5], p[7]]}
 
     def p_parametros(self, p):
         """parametros : VARID
                       | parametros ',' VARID
                       | '[' ']'
-                      | VARID ':' VARID '[' ']'"""
+                      | VARID ':' VARID """
         if len(p) == 2:
             p[0] = [{'var': p[1]}]
         elif len(p) == 3:
             p[0] = []
-        elif len(p) == 6:
+        elif len(p) == 4:
             p[0] = [{'op': 'var_array', 'args': [p[1], p[3]]}]
         else:
             p[1].append({'var': p[3]})
