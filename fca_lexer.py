@@ -2,16 +2,30 @@ import ply.lex as lex
 
 class FCALexer:
     tokens = (
-        "VARID", "NUM", "PLUS", "MINUS", "TIMES", "DIVIDE", "LPAREN", "RPAREN",
-        "EQUALS", "SEMICOLON", "COLON", "COMMA", "STRING", "PROGRAM", "ENTRADA", 
-        "ALEATORIO", "FUNC", "PRINT", "LBRACKET", "RBRACKET", "CONCAT", "VAR", "CONST", "MAP",
-        "FOLD", "COMMENT", "END", "INTERPOLATION", "COMMENT_SINGLE_LINE", "COMMENT_MULTI_LINE",
+        "VARID",                            # Identifiers
+        "NUM",                              # Numbers 
+        "STRING",                           # Strings
+        "PROGRAM",                          # Program
+        "ENTRADA",                          # Input
+        "ALEATORIO",                        # Random
+        "FUNC",                             # Function
+        "PRINT",                            # ESCREVER
+        "CONCAT",                           # Concatenation operator
+        "VAR",                              # Variable
+        "CONST",                            # Constant
+        "MAP",                              # Map function
+        "FOLD",                             # Fold function
+        "COMMENT",                          # Comment
+        "FIM",                              # End
+        "INTERPOLATION",                    # String interpolation
+        "COMMENT_SINGLE_LINE",              # Single line comment
+        "COMMENT_MULTI_LINE",               # Multi-line comment
     )
 
-    # Define literals (single-character tokens)
-    literals = ["+", "-", "*", "/", "(", ")", "=", ";", ":", ",", "[", "]"]
-
-    # Ignored characters (spaces and tabs)
+    # Defenição de literais
+    literals = ["+", "-", "*", "/", "(", ")", "=", ";", ":", ",", "[", "]"] 
+ 
+    # Caracteres a serem ignorados
     t_ignore = " \t"
 
     # Define token for single line comments
@@ -30,39 +44,48 @@ class FCALexer:
         r"[Pp][Rr][Oo][Gg][Rr][Aa][Mm][Aa]"
         return t
 
+    # Define token for input function
     def t_ENTRADA(self, t):
         r"[Ee][Nn][Tt][Rr][Aa][Dd][Aa]"
         return t
 
+    # Define token for random function
     def t_ALEATORIO(self, t):
         r"[Aa][Ll][Ee][Aa][Tt][Oo][Rr][Ii][Oo]"
         return t
 
+    # Define token for function keyword
     def t_FUNC(self, t):
         r"[Ff][Uu][Nn][Cc][Aa][Oo]"
         return t
 
+    # Define token for print function
     def t_PRINT(self, t):
         r"[Ee][Ss][Cc][Rr][Ee][Vv][Ee][Rr]"
         return t
     
+    #define token for variable
     def t_VAR(self, t):
         r"[Vv][Aa][Rr]"
         return t
     
+    # Define token for constant
     def t_CONST(self, t):
         r"[Cc][Oo][Nn][Ss][Tt]"
         return t
 
+    # Define token for function "map"
     def t_MAP(self, t):
         r"[Mm][Aa][Pp]"
         return t
 
+    # Define token for function "fold"
     def t_FOLD(self, t):
         r"[Ff][Oo][Ll][Dd]"
         return t
 
-    def t_END(self, t):
+    # Define token for "fim"
+    def t_FIM(self, t):
         r"[Ff][Ii][Mm]"
         return t
 
@@ -100,6 +123,7 @@ class FCALexer:
         t.type = "FUNC" 
         return t
 
+    # Define tokens for multi-line function definitions
     def t_FUNC_DEF_MULTILINE(self, t): 
         r"[Ff][Uu][Nn][Cc][Aa][Oo]\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*:"
         t.type = "FUNC"
@@ -117,7 +141,7 @@ class FCALexer:
 
     # Build the lexer
     def build(self, **kwargs):
-        self.lexer = lex.lex(module=self, **kwargs)
+        self.lexer = lex.lex(module=self, **kwargs) 
 
     # Input function to set the data for the lexer
     def input(self, string):
