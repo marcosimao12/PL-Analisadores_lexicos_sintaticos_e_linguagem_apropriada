@@ -1,74 +1,22 @@
+import sys
 from fca_lexer import FCALexer
 
-# exemplos = [  # exemplos a avaliar de forma independente... 
-#     "ESCREVER(valor);   -- conteudo de valor e apresentado",
-#     "ESCREVER(365 * 2); -- 730",
-#     "ESCREVER(\"Ola Mundo\"); -- Ola, Mundo!",
-#     "curso = \"ESI\";",
-#     "ESCREVER(\"Ola, \"<> curso); -- Ola, ESI",
-#     """ x = 10  ; 
-#     y = 10 + 20 * 30;
-#     z = x * 100 ; 
-#     b =  a + 1 ; """,
-#     "x = 5 + 3 * (2 + 1);",
-#     "\"Hello, World!\"",
-# ]
+# Verifica se o nome do arquivo foi passado como argumento
+if len(sys.argv) != 2:
+    print("Uso: python test_fca_lexer.py ficheiro.fca")
+    sys.exit()
 
-exemplos = [  # exemplos a avaliar de forma independente... 
-    "ate10 = ALEATORIO(10);",
-    "ESCREVER(valor);   -- conteudo de valor e apresentado",
-    "ESCREVER(365 * 2); -- 730",
-    "ESCREVER(\"Ola Mundo\"); -- Ola, Mundo!",
-    "valor = ENTRADA();",
-    "curso = \"ESI\";",
-    "ESCREVER(\"Ola, \"<> curso); -- Ola, ESI",
-    "\"Hello, World!\"",
-    "\"Hello, World!\" {- teste comentario -}",
-    "FUNCAO soma(a,b),: a+b ;",
-    "FUNCAO soma2(c) : c = c+1 ; c+1 ; FIM",
-    "fib5 = fib(5);",
-    "seis = soma(4,2);",
-    "oito = soma2(seis);",
-    """FUNCAO area_retangulo(a, b):
-    a * b;
-    FIM""",
-    """FUNCAO area_quadrado(a):
-        area_retangulo(a, a);
-    FIM""",
-    "a = area_retangulo(10, 20);",
-    "b = area_quadrado(30);",
-    """FUNCAO fib( 0 ),: 0 ;
-    FUNCAO fib( 1 ),: 0 ;
-    FUNCAO fib( n ):
-        a = fib(n-1);
-        b = fib(n-2);
-        a + b;
-    FIM""",
-    "fib5 = fib(5);",
-    "lista = [ 1, 2, 3 ] ;",
-    "ESCREVER( lista ); -- [1,2,3]",
-    "vazia = [] ;",
-    "FUNCAO mais2( x ),: x + 2 ;",
-    "FUNCAO soma( a, b ),: a + b ;",
-    "lista1 = map( mais2, [] ); -- []",
-    "lista2 = map( mais2, [ 1, 2, 3 ] ); "
-    "-- [ mais2(1),mais2(2),mais2(3)] = [3,4,5]",
-    "lista3 = fold( soma, [ 1, 2, 3 ], 0 );",
-    "-- = soma( 1, soma(2, soma ( 3, 0)))",
-    "-- = soma( 1, soma(2, 3 ))",
-    "-- = soma( 1, 5)",
-    "-- = 6",
-    """{- o marco e bonito 
-    o diogo cheira mal -}""",
-    "FUNCAO somatorio( [] ),: 0 ;",
-    """FUNCAO somatorio( x:xs ),: x + somatorio(xs) ;
-        resultado = somatorio([1,2,3]);""",
-]
+# Obtém o nome do arquivo do argumento
+filename = sys.argv[1]
 
-for frase in exemplos:
+# Abre o arquivo e lê as frases
+with open(filename, 'r') as file:
+    ficheiro = file.readlines()
+
+for frase in ficheiro:
     print(f"----------------------")
-    print(f"frase: '{frase}'")
-    lexer = FCALexer()
+    print(f"frase: '{frase.strip()}'")
+    lexer = FCALexer() 
     lexer.build()
     lexer.input(frase)
     print('tokens: ', end="")
